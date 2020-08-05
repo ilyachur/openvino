@@ -28,7 +28,7 @@ TEST(specialize_function, et_shape_static)
     auto p0 = std::make_shared<op::Parameter>(element::f32, Shape{1, 2, 3});
     auto p1 = std::make_shared<op::Parameter>(element::i32, Shape{1, 2, 3});
 
-    auto k = std::make_shared<op::Convert>(p1, element::f32);
+    auto k = std::make_shared<op::v0::Convert>(p1, element::f32);
     auto a = p0 + k;
 
     auto f = std::make_shared<Function>(a, ParameterVector{p0, p1});
@@ -50,7 +50,7 @@ TEST(specialize_function, et_dynamic_shape_static)
     auto p0 = std::make_shared<op::Parameter>(element::dynamic, Shape{1, 2, 3});
     auto p1 = std::make_shared<op::Parameter>(element::dynamic, Shape{1, 2, 3});
 
-    auto k = std::make_shared<op::Convert>(p1, element::f32);
+    auto k = std::make_shared<op::v0::Convert>(p1, element::f32);
     auto a = p0 + k;
 
     auto f = std::make_shared<Function>(a, ParameterVector{p0, p1});
@@ -72,7 +72,7 @@ TEST(specialize_function, et_static_shape_rank_dynamic)
     auto p0 = std::make_shared<op::Parameter>(element::f32, PartialShape::dynamic());
     auto p1 = std::make_shared<op::Parameter>(element::i32, PartialShape::dynamic());
 
-    auto k = std::make_shared<op::Convert>(p1, element::f32);
+    auto k = std::make_shared<op::v0::Convert>(p1, element::f32);
     auto a = p0 + k;
 
     auto f = std::make_shared<Function>(a, ParameterVector{p0, p1});
@@ -94,7 +94,7 @@ TEST(specialize_function, et_static_shape_rank_static_dynamic)
     auto p0 = std::make_shared<op::Parameter>(element::f32, PartialShape::dynamic(3));
     auto p1 = std::make_shared<op::Parameter>(element::i32, PartialShape::dynamic(3));
 
-    auto k = std::make_shared<op::Convert>(p1, element::f32);
+    auto k = std::make_shared<op::v0::Convert>(p1, element::f32);
     auto a = p0 + k;
 
     auto f = std::make_shared<Function>(a, ParameterVector{p0, p1});
@@ -116,7 +116,7 @@ TEST(specialize_function, et_static_shape_rank_static_dynamic_subst_val)
     auto p0 = std::make_shared<op::Parameter>(element::f32, PartialShape::dynamic(3));
     auto p1 = std::make_shared<op::Parameter>(element::i32, PartialShape::dynamic(3));
 
-    auto k = std::make_shared<op::Convert>(p1, element::f32);
+    auto k = std::make_shared<op::v0::Convert>(p1, element::f32);
     auto a = p0 + k;
 
     auto f = std::make_shared<Function>(a, ParameterVector{p0, p1});
@@ -136,7 +136,7 @@ TEST(specialize_function, et_static_shape_rank_static_dynamic_subst_val)
     auto plus_node =
         as_type_ptr<op::Add>(g->get_results().at(0)->input_value(0).get_node_shared_ptr());
     ASSERT_TRUE(plus_node);
-    auto convert_node = as_type_ptr<op::Convert>(plus_node->input_value(1).get_node_shared_ptr());
+    auto convert_node = as_type_ptr<op::v0::Convert>(plus_node->input_value(1).get_node_shared_ptr());
     ASSERT_TRUE(convert_node);
     auto const_node = as_type_ptr<op::Constant>(convert_node->input_value(0).get_node_shared_ptr());
     ASSERT_TRUE(const_node);
@@ -154,7 +154,7 @@ TEST(specialize_function, et_static_shape_rank_dynamic_validation_fails)
     auto p0 = std::make_shared<op::Parameter>(element::f32, PartialShape::dynamic());
     auto p1 = std::make_shared<op::Parameter>(element::i32, PartialShape::dynamic());
 
-    auto k = std::make_shared<op::Convert>(p1, element::f32);
+    auto k = std::make_shared<op::v0::Convert>(p1, element::f32);
     auto a = p0 + k;
 
     auto f = std::make_shared<Function>(a, ParameterVector{p0, p1});
@@ -179,7 +179,7 @@ TEST(specialize_function, et_dynamic_shape_static_validation_fails)
     auto p0 = std::make_shared<op::Parameter>(element::dynamic, Shape{1, 2, 3});
     auto p1 = std::make_shared<op::Parameter>(element::dynamic, Shape{1, 2, 3});
 
-    auto k = std::make_shared<op::Convert>(p1, element::f32);
+    auto k = std::make_shared<op::v0::Convert>(p1, element::f32);
     auto a = p0 + k;
 
     auto f = std::make_shared<Function>(a, ParameterVector{p0, p1});
@@ -207,7 +207,7 @@ TEST(specialize_function, et_static_shape_rank_static_dynamic_rank_mismatch)
     auto p0 = std::make_shared<op::Parameter>(element::f32, PartialShape::dynamic(3));
     auto p1 = std::make_shared<op::Parameter>(element::i32, PartialShape::dynamic(3));
 
-    auto k = std::make_shared<op::Convert>(p1, element::f32);
+    auto k = std::make_shared<op::v0::Convert>(p1, element::f32);
     auto a = p0 + k;
 
     auto f = std::make_shared<Function>(a, ParameterVector{p0, p1});
@@ -236,7 +236,7 @@ TEST(specialize_function, et_static_shape_rank_static_dynamic_dim_mismatch)
     auto p1 =
         std::make_shared<op::Parameter>(element::i32, PartialShape{1, Dimension::dynamic(), 3});
 
-    auto k = std::make_shared<op::Convert>(p1, element::f32);
+    auto k = std::make_shared<op::v0::Convert>(p1, element::f32);
     auto a = p0 + k;
 
     auto f = std::make_shared<Function>(a, ParameterVector{p0, p1});
@@ -259,7 +259,7 @@ TEST(specialize_function, et_count_wrong)
     auto p0 = std::make_shared<op::Parameter>(element::f32, PartialShape{1, 2, 3});
     auto p1 = std::make_shared<op::Parameter>(element::i32, PartialShape{1, 2, 3});
 
-    auto k = std::make_shared<op::Convert>(p1, element::f32);
+    auto k = std::make_shared<op::v0::Convert>(p1, element::f32);
     auto a = p0 + k;
 
     auto f = std::make_shared<Function>(a, ParameterVector{p0, p1});
@@ -282,7 +282,7 @@ TEST(specialize_function, shape_count_wrong)
     auto p0 = std::make_shared<op::Parameter>(element::f32, PartialShape{1, 2, 3});
     auto p1 = std::make_shared<op::Parameter>(element::i32, PartialShape{1, 2, 3});
 
-    auto k = std::make_shared<op::Convert>(p1, element::f32);
+    auto k = std::make_shared<op::v0::Convert>(p1, element::f32);
     auto a = p0 + k;
 
     auto f = std::make_shared<Function>(a, ParameterVector{p0, p1});
@@ -306,7 +306,7 @@ TEST(specialize_function, value_count_wrong)
     auto p0 = std::make_shared<op::Parameter>(element::f32, PartialShape{1, 2, 3});
     auto p1 = std::make_shared<op::Parameter>(element::i32, PartialShape{1, 2, 3});
 
-    auto k = std::make_shared<op::Convert>(p1, element::f32);
+    auto k = std::make_shared<op::v0::Convert>(p1, element::f32);
     auto a = p0 + k;
 
     auto f = std::make_shared<Function>(a, ParameterVector{p0, p1});

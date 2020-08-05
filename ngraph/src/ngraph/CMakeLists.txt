@@ -438,11 +438,7 @@ set (SRC
     pass/algebraic_simplification.cpp
     pass/algebraic_simplification.hpp
     pass/constant_folding_arithmetic_reduction.cpp
-    pass/constant_folding_convert.cpp
     pass/constant_folding_dequantize.cpp
-    pass/constant_folding_gather.cpp
-    pass/constant_folding_scatter.cpp
-    pass/constant_folding_logical_reduction.cpp
     pass/constant_folding_one_hot.cpp
     pass/constant_folding_pad.cpp
     pass/constant_folding_quantize.cpp

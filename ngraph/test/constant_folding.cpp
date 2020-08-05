@@ -592,14 +592,14 @@ TEST(constant_folding, const_convert)
 
     vector<int32_t> values_in{1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7};
     auto constant = op::Constant::create(element::f32, input_shape, values_in);
-    auto convert = make_shared<op::Convert>(constant, element::u64);
+    auto convert = make_shared<op::v0::Convert>(constant, element::u64);
     auto f = make_shared<Function>(convert, ParameterVector{});
 
     pass::Manager pass_manager;
     pass_manager.register_pass<pass::ConstantFolding>();
     pass_manager.run_passes(f);
 
-    ASSERT_EQ(count_ops_of_type<op::Convert>(f), 0);
+    ASSERT_EQ(count_ops_of_type<op::v0::Convert>(f), 0);
     ASSERT_EQ(count_ops_of_type<op::Constant>(f), 1);
 
     auto new_const =

@@ -271,7 +271,7 @@ std::shared_ptr<ngraph::Node> V10Parser::createNode(const std::vector<ngraph::Ou
         std::make_shared<LayerCreator<ngraph::op::Clamp>>("Clamp"),
         std::make_shared<LayerCreator<ngraph::op::Concat>>("Concat"),
         std::make_shared<LayerCreator<ngraph::op::Constant>>("Const"),
-        std::make_shared<LayerCreator<ngraph::op::Convert>>("Convert"),
+        std::make_shared<LayerCreator<ngraph::op::v0::Convert>>("Convert"),
         std::make_shared<LayerCreator<ngraph::op::CTCGreedyDecoder>>("CTCGreedyDecoder"),
         std::make_shared<LayerCreator<ngraph::op::ReverseSequence>>("ReverseSequence"),
         std::make_shared<LayerCreator<ngraph::op::Cos>>("Cos"),
@@ -809,7 +809,7 @@ std::shared_ptr<ngraph::Node> V10Parser::LayerCreator<ngraph::op::ReverseSequenc
 
 // Covnert layer
 template <>
-std::shared_ptr<ngraph::Node> V10Parser::LayerCreator<ngraph::op::Convert>::createLayer(
+std::shared_ptr<ngraph::Node> V10Parser::LayerCreator<ngraph::op::v0::Convert>::createLayer(
     const ngraph::OutputVector& inputs, const pugi::xml_node& node, std::istream& binStream,
     const GenericLayerParams& layerParsePrms) {
     checkParameters(inputs, layerParsePrms, 1);
@@ -817,7 +817,7 @@ std::shared_ptr<ngraph::Node> V10Parser::LayerCreator<ngraph::op::Convert>::crea
     if (dn.empty())
         THROW_IE_EXCEPTION << "Cannot read parameter for " << getType() << " layer with name: " << layerParsePrms.name;
 
-    return std::make_shared<ngraph::op::Convert>(inputs[0],
+    return std::make_shared<ngraph::op::v0::Convert>(inputs[0],
                                                  details::convertPrecision(GetStrAttr(dn, "destination_type")));
 }
 

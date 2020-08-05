@@ -35,7 +35,7 @@ NGRAPH_TEST(${BACKEND_NAME}, transpose)
     //
     auto x = make_shared<op::Parameter>(element::f32, PartialShape::dynamic());
     auto perm = make_shared<op::Parameter>(element::i32, PartialShape{Dimension::dynamic()});
-    auto perm_i64 = make_shared<op::Convert>(perm, element::i64);
+    auto perm_i64 = make_shared<op::v0::Convert>(perm, element::i64);
 
     auto x_transpose = make_shared<op::Transpose>(x, perm_i64);
 

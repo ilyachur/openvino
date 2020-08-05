@@ -1027,7 +1027,7 @@ shared_ptr<Node> JSONDeserializer::deserialize_node(json node_js)
         case OP_TYPEID::Convert:
         {
             auto target_type = read_element_type(node_js.at("target_type"));
-            node = make_shared<op::Convert>(args[0], target_type);
+            node = make_shared<op::v0::Convert>(args[0], target_type);
             break;
         }
         case OP_TYPEID::Cos:
@@ -2123,7 +2123,7 @@ json JSONSerializer::serialize_node(const Node& n)
     }
     case OP_TYPEID::Convert:
     {
-        auto tmp = static_cast<const op::Convert*>(&n);
+        auto tmp = static_cast<const op::v0::Convert*>(&n);
         node["target_type"] = write_element_type(tmp->get_convert_element_type());
         break;
     }

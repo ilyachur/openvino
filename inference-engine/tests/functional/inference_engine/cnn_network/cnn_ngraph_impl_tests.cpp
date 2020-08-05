@@ -48,7 +48,7 @@ TEST(CNNNGraphImplTests, TestConvertWithRemoveLastLayerNetwork) {
         param->set_friendly_name("param");
         auto relu = std::make_shared<ngraph::op::Relu>(param);
         relu->set_friendly_name("relu");
-        auto convert = std::make_shared<ngraph::op::Convert>(relu, ngraph::element::Type_t::i64);
+        auto convert = std::make_shared<ngraph::op::v0::Convert>(relu, ngraph::element::Type_t::i64);
         convert->set_friendly_name("convert");
         auto result = std::make_shared<ngraph::op::Result>(convert);
 

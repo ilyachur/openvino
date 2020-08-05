@@ -145,9 +145,9 @@ TEST(copy, convert)
     auto arg0 = make_shared<op::Parameter>(element::f32, shape);
     OutputVector new_args{make_shared<op::Parameter>(element::f32, shape)};
 
-    auto node = make_shared<op::Convert>(arg0, et);
+    auto node = make_shared<op::v0::Convert>(arg0, et);
     auto new_node = node->clone_with_new_inputs(new_args);
-    auto node_cast = as_type_ptr<op::Convert>(new_node);
+    auto node_cast = as_type_ptr<op::v0::Convert>(new_node);
     ASSERT_NE(node_cast, nullptr);
 
     ASSERT_TRUE(nullptr != new_node);

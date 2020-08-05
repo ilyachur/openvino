@@ -151,7 +151,7 @@ OutputVector op::FakeQuantize::decompose_op() const
                                   axes,
                                   op::Quantize::RoundMode::ROUND_NEAREST_TOWARD_EVEN);
 
-    quantized_data = make_shared<op::Convert>(quantized_data, input_data_type);
+    quantized_data = make_shared<op::v0::Convert>(quantized_data, input_data_type);
 
     // dequantization without using the Dequantize op (just a multiplication by the dequant_scale)
     const auto dequantized_data = quantized_data * dequant_scale;

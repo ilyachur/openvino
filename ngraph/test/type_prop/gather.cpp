@@ -28,7 +28,7 @@ TEST(type_prop, gather_no_axis)
     Shape out_shape{2, 2, 2};
     auto P = make_shared<op::Parameter>(element::f32, params_shape);
     auto I = make_shared<op::Parameter>(element::i32, indices_shape);
-    auto G = make_shared<op::Gather>(P, I);
+    auto G = make_shared<op::v0::Gather>(P, I);
     ASSERT_EQ(G->get_element_type(), element::f32);
     ASSERT_EQ(G->get_shape(), out_shape);
 }
@@ -40,7 +40,7 @@ TEST(type_prop, gather)
     Shape out_shape{3, 1, 2};
     auto P = make_shared<op::Parameter>(element::f32, params_shape);
     auto I = make_shared<op::Parameter>(element::i32, indices_shape);
-    auto G = make_shared<op::Gather>(P, I, 1);
+    auto G = make_shared<op::v0::Gather>(P, I, 1);
     ASSERT_EQ(G->get_element_type(), element::f32);
     ASSERT_EQ(G->get_shape(), out_shape);
 }
@@ -54,7 +54,7 @@ TEST(type_prop, gather_fail_params_rank)
     auto I = make_shared<op::Parameter>(element::i32, indices_shape);
     try
     {
-        auto G = make_shared<op::Gather>(P, I, 2);
+        auto G = make_shared<op::v0::Gather>(P, I, 2);
         // Should have thrown, so fail if it didn't
         FAIL() << "Incorrect params rank";
     }
@@ -78,7 +78,7 @@ TEST(type_prop, gather_fail_indices_element_type)
     auto I = make_shared<op::Parameter>(element::i16, indices_shape);
     try
     {
-        auto G = make_shared<op::Gather>(P, I, 1);
+        auto G = make_shared<op::v0::Gather>(P, I, 1);
         // Should have thrown, so fail if it didn't
         FAIL() << "Incorrect indices element type";
     }

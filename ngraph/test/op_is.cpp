@@ -155,7 +155,7 @@ namespace
 
     void op_is_Convert()
     {
-        op::Convert node;
+        op::v0::Convert node;
         EXPECT_FALSE(op::is_unary_elementwise_arithmetic(&node));
         EXPECT_FALSE(op::is_binary_elementwise_arithmetic(&node));
         EXPECT_FALSE(op::is_binary_elementwise_comparison(&node));
@@ -353,7 +353,7 @@ namespace
 
     void op_is_Gather()
     {
-        op::Gather node;
+        op::v0::Gather node;
         EXPECT_FALSE(op::is_unary_elementwise_arithmetic(&node));
         EXPECT_FALSE(op::is_binary_elementwise_arithmetic(&node));
         EXPECT_FALSE(op::is_binary_elementwise_comparison(&node));
@@ -362,7 +362,7 @@ namespace
 
     void op_is_GatherND()
     {
-        op::GatherND node;
+        op::v0::GatherND node;
         EXPECT_FALSE(op::is_unary_elementwise_arithmetic(&node));
         EXPECT_FALSE(op::is_binary_elementwise_arithmetic(&node));
         EXPECT_FALSE(op::is_binary_elementwise_comparison(&node));

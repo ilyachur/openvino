@@ -377,7 +377,7 @@ CNNLayer::Ptr NodeConverter<ngraph::op::Constant>::createLayer(const std::shared
 }
 
 template <>
-CNNLayer::Ptr NodeConverter<ngraph::op::Convert>::createLayer(const std::shared_ptr<ngraph::Node>& layer) const {
+CNNLayer::Ptr NodeConverter<ngraph::op::v0::Convert>::createLayer(const std::shared_ptr<ngraph::Node>& layer) const {
     LayerParams params = {layer->get_friendly_name(), "Convert",
                           details::convertPrecision(layer->get_output_element_type(0))};
     auto res = std::make_shared<InferenceEngine::CNNLayer>(params);

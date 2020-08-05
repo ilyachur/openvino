@@ -429,7 +429,7 @@ namespace
         NGRAPH_CHECK(output_pshape.is_static(), "output shape must be static", *node);
         const auto output_shape = output_pshape.to_shape();
 
-        auto one_hot = std::make_shared<ngraph::op::Convert>(
+        auto one_hot = std::make_shared<ngraph::op::v0::Convert>(
             std::make_shared<ngraph::op::OneHot>(indices, output_shape, axis),
             on_value.get_element_type());
 

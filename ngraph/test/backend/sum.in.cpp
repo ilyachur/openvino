@@ -701,7 +701,7 @@ NGRAPH_TEST(${BACKEND_NAME}, sum_dynamic)
     // Create a graph for f(x,axes:int32) = Sum(x,Convert<int64>(axes)).
     auto x = make_shared<op::Parameter>(element::f32, PartialShape::dynamic());
     auto axes = make_shared<op::Parameter>(element::i32, PartialShape{Dimension::dynamic()});
-    auto axes_i64 = make_shared<op::Convert>(axes, element::i64);
+    auto axes_i64 = make_shared<op::v0::Convert>(axes, element::i64);
 
     auto sum = make_shared<op::Sum>(x, axes_i64);
     ASSERT_TRUE(sum->get_output_partial_shape(0).rank().is_dynamic());

@@ -278,7 +278,7 @@ protected:
         }
         case OP_TYPEID::Convert:
         {
-            // const op::Convert* c = static_cast<const op::Convert*>(&node);
+            // const op::v0::Convert* c = static_cast<const op::v0::Convert*>(&node);
             element::Type type = node.get_element_type();
             std::stringstream ss;
             size_t element_count = shape_size(node.get_output_shape(0));

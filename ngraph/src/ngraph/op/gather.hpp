@@ -79,8 +79,5 @@ namespace ngraph
                               const HostTensorVector& inputs) const override;
             };
         }
-
-        // latest stable opset version
-        using v0::Gather;
     }
 }
