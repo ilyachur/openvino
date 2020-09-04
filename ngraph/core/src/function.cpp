@@ -336,7 +336,7 @@ bool Function::evaluate(const HostTensorVector& output_tensors,
         output_tensor_map[result] = output_tensors.at(i);
         outputs.push_back(result);
     }
-    evaluate_nodes(value_map, output_tensor_map, outputs);
+    // evaluate_nodes(value_map, output_tensor_map, outputs);
     return true;
 }
 

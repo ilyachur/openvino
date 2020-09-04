@@ -570,17 +570,18 @@ void ngraph::insert_new_node_between(const shared_ptr<Node>& src_node,
 
 std::shared_ptr<Node> ngraph::make_zero(const element::Type& element_type, const Shape& shape)
 {
-    std::shared_ptr<Node> zero = op::Constant::create(element_type, Shape{}, {0.0});
-    if (shape.size() > 0)
-    {
-        AxisSet axes;
-        for (size_t i = 0; i < shape.size(); i++)
-        {
-            axes.insert(i);
-        }
-        zero = std::make_shared<op::Broadcast>(zero, shape, axes);
-    }
-    return zero;
+    return nullptr;
+    // std::shared_ptr<Node> zero = op::Constant::create(element_type, Shape{}, {0.0});
+    // if (shape.size() > 0)
+    // {
+    //     AxisSet axes;
+    //     for (size_t i = 0; i < shape.size(); i++)
+    //     {
+    //         axes.insert(i);
+    //     }
+    //     zero = std::make_shared<op::Broadcast>(zero, shape, axes);
+    // }
+    // return zero;
 }
 
 std::shared_ptr<Node> ngraph::make_constant_from_string(std::string val,

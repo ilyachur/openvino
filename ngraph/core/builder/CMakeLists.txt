@@ -18,6 +18,10 @@ set(TARGET_NAME "ngraph_builders")
 
 file(GLOB_RECURSE LIBRARY_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 file(GLOB_RECURSE PUBLIC_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp)
+set (SRC 
+    include/ngraph/builder/split.hpp
+    src/builder/split.cpp
+    )
 
 set(BUILDER_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include/ CACHE INTERNAL "")
 
@@ -28,7 +32,7 @@ source_group("src" FILES ${LIBRARY_SRC})
 source_group("include" FILES ${PUBLIC_HEADERS})
 
 # Create shared library
-add_library(${TARGET_NAME} STATIC ${LIBRARY_SRC} ${PUBLIC_HEADERS})
+add_library(${TARGET_NAME} STATIC ${SRC})
 
 # Defines macro in C++ to load backend plugin
 target_include_directories(${TARGET_NAME} PUBLIC ${BUILDER_INCLUDE_DIR})
