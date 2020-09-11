@@ -28,18 +28,18 @@ op::ReadValue::ReadValue(const Output<Node>& init_value, const std::string& vari
     constructor_validate_and_infer_types();
 }
 
-void op::ReadValue::validate_and_infer_types()
-{
-    auto arg_t = get_input_element_type(0);
-    auto output_shape = get_input_partial_shape(0);
-
-    VariableInfo info = {output_shape, arg_t, m_variable_id};
-    if (m_variable == nullptr)
-        m_variable = std::make_shared<Variable>(info);
-    else
-        m_variable->update(info);
-    set_output_type(0, arg_t, output_shape);
-}
+// void op::ReadValue::validate_and_infer_types()
+// {
+//     auto arg_t = get_input_element_type(0);
+//     auto output_shape = get_input_partial_shape(0);
+// 
+//     VariableInfo info = {output_shape, arg_t, m_variable_id};
+//     if (m_variable == nullptr)
+//         m_variable = std::make_shared<Variable>(info);
+//     else
+//         m_variable->update(info);
+//     set_output_type(0, arg_t, output_shape);
+// }
 
 shared_ptr<Node> op::ReadValue::clone_with_new_inputs(const OutputVector& new_args) const
 {
@@ -47,8 +47,8 @@ shared_ptr<Node> op::ReadValue::clone_with_new_inputs(const OutputVector& new_ar
     return make_shared<ReadValue>(new_args.at(0), m_variable_id);
 }
 
-bool op::v3::ReadValue::visit_attributes(AttributeVisitor& visitor)
-{
-    visitor.on_attribute("variable_id", m_variable_id);
-    return true;
-}
+// bool op::v3::ReadValue::visit_attributes(AttributeVisitor& visitor)
+// {
+//     visitor.on_attribute("variable_id", m_variable_id);
+//     return true;
+// }

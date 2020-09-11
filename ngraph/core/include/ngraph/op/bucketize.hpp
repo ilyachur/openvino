@@ -43,8 +43,8 @@ namespace ngraph
                           const element::Type output_type = element::i64,
                           const bool with_right_bound = true);
 
-                virtual void validate_and_infer_types() override;
-                virtual bool visit_attributes(AttributeVisitor& visitor) override;
+                // virtual void validate_and_infer_types() override;
+                // virtual bool visit_attributes(AttributeVisitor& visitor) override;
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& inputs) const override;

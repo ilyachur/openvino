@@ -40,58 +40,58 @@ op::GRN::GRN(const Output<Node>& data, float bias)
     constructor_validate_and_infer_types();
 }
 
-bool ngraph::op::v0::GRN::visit_attributes(AttributeVisitor& visitor)
-{
-    visitor.on_attribute("bias", m_bias);
-    return true;
-}
+// bool ngraph::op::v0::GRN::visit_attributes(AttributeVisitor& visitor)
+// {
+//     visitor.on_attribute("bias", m_bias);
+//     return true;
+// }
 
-void op::GRN::pre_validate_and_infer_types()
-{
-    const auto& data_pshape = get_input_partial_shape(0);
-
-    if (data_pshape.is_static())
-    {
-        const Shape& data_shape{data_pshape.to_shape()};
-
-        // Input data must be 2, 3 or 4D tensor.
-        NODE_VALIDATION_CHECK(this,
-                              (data_shape.size() >= 2 && data_shape.size() <= 4),
-                              "Input tensor rank must be 2, 3 or 4 dimensional (actual input "
-                              "shape: ",
-                              data_shape,
-                              ").");
-    }
-}
-
-OutputVector op::GRN::decompose_op() const
-{
-    Output<Node> data{input_value(0)};
-    const Shape& input_shape{data.get_shape()};
-
-    // Reshape to 4D tensor.
-    if (input_shape.size() != 4)
-    {
-        Shape data_shape(4 - input_shape.size(), 1);
-        copy(begin(input_shape), end(input_shape), back_inserter(data_shape));
-        data = builder::opset1::reshape(data, data_shape);
-    }
-
-    const auto axis_set_const = op::Constant::create(element::i64, {}, {1});
-    // Calculate l2 norm across channels.
-    shared_ptr<Node> norm = builder::opset1::l2_norm(data, axis_set_const, m_bias);
-    // Get back reduced axis.
-    norm = std::make_shared<Broadcast>(norm, data.get_shape(), AxisSet{1});
-    data = data / norm;
-
-    // get back original input tensor rank
-    if (input_shape.size() != 4)
-    {
-        data = builder::opset1::reshape(data, input_shape);
-    }
-
-    return OutputVector{data};
-}
+// void op::GRN::pre_validate_and_infer_types()
+// {
+//     const auto& data_pshape = get_input_partial_shape(0);
+// 
+//     if (data_pshape.is_static())
+//     {
+//         const Shape& data_shape{data_pshape.to_shape()};
+// 
+//         // Input data must be 2, 3 or 4D tensor.
+//         NODE_VALIDATION_CHECK(this,
+//                               (data_shape.size() >= 2 && data_shape.size() <= 4),
+//                               "Input tensor rank must be 2, 3 or 4 dimensional (actual input "
+//                               "shape: ",
+//                               data_shape,
+//                               ").");
+//     }
+// }
+// 
+// OutputVector op::GRN::decompose_op() const
+// {
+//     Output<Node> data{input_value(0)};
+//     const Shape& input_shape{data.get_shape()};
+// 
+//     // Reshape to 4D tensor.
+//     if (input_shape.size() != 4)
+//     {
+//         Shape data_shape(4 - input_shape.size(), 1);
+//         copy(begin(input_shape), end(input_shape), back_inserter(data_shape));
+//         data = builder::opset1::reshape(data, data_shape);
+//     }
+// 
+//     const auto axis_set_const = op::Constant::create(element::i64, {}, {1});
+//     // Calculate l2 norm across channels.
+//     shared_ptr<Node> norm = builder::opset1::l2_norm(data, axis_set_const, m_bias);
+//     // Get back reduced axis.
+//     norm = std::make_shared<Broadcast>(norm, data.get_shape(), AxisSet{1});
+//     data = data / norm;
+// 
+//     // get back original input tensor rank
+//     if (input_shape.size() != 4)
+//     {
+//         data = builder::opset1::reshape(data, input_shape);
+//     }
+// 
+//     return OutputVector{data};
+// }
 
 shared_ptr<Node> op::GRN::clone_with_new_inputs(const OutputVector& new_args) const
 {

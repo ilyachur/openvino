@@ -111,371 +111,371 @@ using namespace std;
 // dealt with, but have not had time to implement them yet. --amprocte
 //
 
-const int ngraph::pass::VisualizeTree::max_jump_distance = 20;
-
-class HeightMap
-{
-public:
-    HeightMap() {}
-    HeightMap(std::set<Node*> initials)
-    {
-        for (auto& n : initials)
-        {
-            m_heights[n] = 0;
-        }
-    }
-    void absorb(const HeightMap& other)
-    {
-        for (auto& p : other.m_heights)
-        {
-            auto k = p.first;
-            auto v = p.second;
-            m_heights[k] = std::max(m_heights[k], v + 1);
-        }
-    }
-    int64_t max_jump_to(const HeightMap& target)
-    {
-        int64_t result = 0;
-        for (auto& p : m_heights)
-        {
-            auto k = p.first;
-            auto v = p.second;
-            if (target.m_heights.count(k) != 0)
-            {
-                result = std::max(result, std::abs(target.m_heights.at(k) - v));
-            }
-        }
-        return result;
-    }
-
-private:
-    std::unordered_map<Node*, int64_t> m_heights;
-};
-
-static std::string label_edge(const std::shared_ptr<Node>& /* src */,
-                              const std::shared_ptr<Node>& dst,
-                              size_t arg_index,
-                              int64_t jump_distance)
-{
-    std::stringstream ss;
-    if (getenv_bool("NGRAPH_VISUALIZE_EDGE_LABELS"))
-    {
-        size_t output = 0;
-        stringstream label_edge;
-        label_edge << "[label=\" " << output << " -> " << arg_index << " \"]";
-        ss << label_edge.str();
-    }
-
-    else if (getenv_bool("NGRAPH_VISUALIZE_EDGE_JUMP_DISTANCE"))
-    {
-        if (jump_distance > 1)
-        {
-            stringstream label_edge;
-            label_edge << "[label=\"jump=" << jump_distance << "\"]";
-            ss << label_edge.str();
-        }
-    }
-    return ss.str();
-}
+// const int ngraph::pass::VisualizeTree::max_jump_distance = 20;
+// 
+// class HeightMap
+// {
+// public:
+//     HeightMap() {}
+//     HeightMap(std::set<Node*> initials)
+//     {
+//         for (auto& n : initials)
+//         {
+//             m_heights[n] = 0;
+//         }
+//     }
+//     void absorb(const HeightMap& other)
+//     {
+//         for (auto& p : other.m_heights)
+//         {
+//             auto k = p.first;
+//             auto v = p.second;
+//             m_heights[k] = std::max(m_heights[k], v + 1);
+//         }
+//     }
+//     int64_t max_jump_to(const HeightMap& target)
+//     {
+//         int64_t result = 0;
+//         for (auto& p : m_heights)
+//         {
+//             auto k = p.first;
+//             auto v = p.second;
+//             if (target.m_heights.count(k) != 0)
+//             {
+//                 result = std::max(result, std::abs(target.m_heights.at(k) - v));
+//             }
+//         }
+//         return result;
+//     }
+// 
+// private:
+//     std::unordered_map<Node*, int64_t> m_heights;
+// };
+// 
+// static std::string label_edge(const std::shared_ptr<Node>& [> src <],
+//                               const std::shared_ptr<Node>& dst,
+//                               size_t arg_index,
+//                               int64_t jump_distance)
+// {
+//     std::stringstream ss;
+//     if (getenv_bool("NGRAPH_VISUALIZE_EDGE_LABELS"))
+//     {
+//         size_t output = 0;
+//         stringstream label_edge;
+//         label_edge << "[label=\" " << output << " -> " << arg_index << " \"]";
+//         ss << label_edge.str();
+//     }
+// 
+//     else if (getenv_bool("NGRAPH_VISUALIZE_EDGE_JUMP_DISTANCE"))
+//     {
+//         if (jump_distance > 1)
+//         {
+//             stringstream label_edge;
+//             label_edge << "[label=\"jump=" << jump_distance << "\"]";
+//             ss << label_edge.str();
+//         }
+//     }
+//     return ss.str();
+// }
 
 NGRAPH_RTTI_DEFINITION(ngraph::pass::VisualizeTree, "ngraph::pass::VisualizeTree", 0);
 
-bool pass::VisualizeTree::run_on_function(std::shared_ptr<ngraph::Function> f)
-{
-    unordered_map<Node*, HeightMap> height_maps;
-
-    for (auto& node : f->get_ops())
-    {
-        if (node->description() == "Result")
-        {
-            height_maps[node.get()] = HeightMap({node.get()});
-        }
-        else
-        {
-            height_maps[node.get()] = HeightMap();
-        }
-    }
-
-    auto nodes = topological_sort(f->get_ops());
-
-    for (auto it = nodes.rbegin(); it != nodes.rend(); ++it)
-    {
-        auto& node = *it;
-        for (auto& output : node->outputs())
-        {
-            for (auto& input : output.get_target_inputs())
-            {
-                auto target_node = input.get_node();
-                height_maps[node.get()].absorb(height_maps[target_node]);
-            }
-        }
-    }
-
-    // TODO(amprocte): Maybe find a way to make this tunable.
-
-    size_t fake_node_ctr = 0;
-
-    traverse_nodes(
-        f, [&](shared_ptr<Node> node) { add_node_arguments(node, height_maps, fake_node_ctr); });
-
-    render();
-
-    // Clean up local variable not to hold node pointers
-    m_nodes_with_attributes.clear();
-
-    return false;
-}
-
-pass::VisualizeTree::VisualizeTree(const string& file_name, node_modifiers_t nm, bool dot_only)
-    : m_name{file_name}
-    , m_node_modifiers{nm}
-    , m_dot_only(dot_only)
-{
-}
-
-void pass::VisualizeTree::add_node_arguments(shared_ptr<Node> node,
-                                             unordered_map<Node*, HeightMap>& height_maps,
-                                             size_t& fake_node_ctr)
-{
-    size_t arg_index = 0;
-    for (auto input_value : node->input_values())
-    {
-        auto arg = input_value.get_node_shared_ptr();
-        size_t jump_distance = height_maps[arg.get()].max_jump_to(height_maps[node.get()]);
-        if (is_type<ngraph::op::Constant>(arg) || is_type<ngraph::op::Parameter>(arg))
-        {
-            auto clone_name = "CLONE_" + to_string(fake_node_ctr);
-            auto color = (arg->description() == "Parameter" ? "blue" : "black");
-            m_ss << "    " << clone_name << "[shape=\"box\" style=\"dashed,filled\" color=\""
-                 << color << "\" fillcolor=\"white\" label=\"" << get_node_name(arg) << "\n"
-                 << get_constant_value(arg) << "\"]\n";
-            m_ss << "    " << clone_name << " -> " << node->get_name()
-                 << label_edge(arg, node, arg_index, jump_distance) << "\n";
-            fake_node_ctr++;
-        }
-        else if (jump_distance > max_jump_distance)
-        {
-            m_ss << add_attributes(arg);
-            m_ss << add_attributes(node);
-            auto recv_node_name = "RECV_" + to_string(fake_node_ctr);
-            auto send_node_name = "SEND_" + to_string(fake_node_ctr);
-            m_ss << "    " << recv_node_name << "[shape=\"box\" style=\"solid,filled\" "
-                                                "fillcolor=\"#ffcccc\" label=\"Receive["
-                 << arg->get_name() << "]\"]\n";
-            m_ss << "    " << send_node_name << "[shape=\"box\" style=\"solid,filled\" "
-                                                "fillcolor=\"#ccffcc\" label=\"Send["
-                 << node->get_name() << "]\"]\n";
-            m_ss << "    " << arg->get_name() << " -> " << send_node_name
-                 << label_edge(arg, node, arg_index, jump_distance) << "\n";
-            m_ss << "    " << recv_node_name << " -> " << node->get_name()
-                 << label_edge(arg, node, arg_index, jump_distance) << "\n";
-            fake_node_ctr++;
-        }
-        else
-        {
-            m_ss << add_attributes(arg);
-            m_ss << add_attributes(node);
-            m_ss << "    " << arg->get_name() << " -> " << node->get_name()
-                 << label_edge(arg, node, arg_index, jump_distance) << "\n";
-        }
-        arg_index++;
-    }
-}
-
-string pass::VisualizeTree::add_attributes(shared_ptr<Node> node)
-{
-    string rc;
-    if (m_nodes_with_attributes.find(node) == m_nodes_with_attributes.end())
-    {
-        m_nodes_with_attributes.insert(node);
-        rc = get_attributes(node);
-    }
-    return rc;
-}
-
-static std::string pretty_partial_shape(const PartialShape& shape)
-{
-    std::stringstream ss;
-
-    if (shape.rank().is_dynamic())
-    {
-        ss << "?";
-    }
-    else
-    {
-        bool first = true;
-
-        ss << "[";
-        for (size_t i = 0; i < shape.rank().get_length(); i++)
-        {
-            if (!first)
-            {
-                ss << ",";
-            }
-            if (shape[i].is_dynamic())
-            {
-                ss << "?";
-            }
-            else
-            {
-                ss << shape[i].get_length();
-            }
-            first = false;
-        }
-        ss << "]";
-    }
-
-    return ss.str();
-}
-
-template <typename T>
-static std::string pretty_value(const vector<T>& value)
-{
-    std::stringstream ss;
-    bool first = true;
-    for (const auto& i : value)
-    {
-        if (!first)
-            ss << ", ";
-        ss << i;
-        first = false;
-    }
-    return ss.str();
-}
-
-std::string pass::VisualizeTree::get_constant_value(std::shared_ptr<Node> node, size_t max_elements)
-{
-    if (!op::is_constant(node))
-        return {};
-    std::stringstream ss;
-    ss << "{" << node->get_element_type().get_type_name() << "}";
-    ss << pretty_partial_shape(node->get_output_partial_shape(0));
-
-    if (ngraph::shape_size(node->get_shape()) > max_elements)
-        return ss.str();
-
-    ss << "\nvalue: ";
-    const auto constant = as_type_ptr<op::Constant>(node);
-    switch (constant->get_output_element_type(0))
-    {
-    case element::Type_t::undefined: ss << "[ undefined value ]"; break;
-    case element::Type_t::dynamic: ss << "[ dynamic value ]"; break;
-    case element::Type_t::u1: ss << "[ u1 value ]"; break;
-    case element::Type_t::bf16:
-    case element::Type_t::f16:
-    case element::Type_t::f32:
-    case element::Type_t::f64:
-        ss << "[" << pretty_value(constant->cast_vector<double>()) << "]";
-        break;
-    case element::Type_t::i8:
-    case element::Type_t::i16:
-    case element::Type_t::i32:
-    case element::Type_t::i64:
-        ss << "[" << pretty_value(constant->cast_vector<int64_t>()) << "]";
-        break;
-    case element::Type_t::boolean:
-    case element::Type_t::u8:
-    case element::Type_t::u16:
-    case element::Type_t::u32:
-    case element::Type_t::u64:
-        ss << "[" << pretty_value(constant->cast_vector<uint64_t>()) << "]";
-        break;
-    }
-    return ss.str();
-}
-
-string pass::VisualizeTree::get_attributes(shared_ptr<Node> node)
-{
-    vector<string> attributes;
-    attributes.push_back("shape=box");
-
-    if (ngraph::op::is_output(node))
-    {
-        attributes.push_back("color=crimson");
-        attributes.push_back("penwidth=1.5");
-    }
-    else
-    {
-        attributes.push_back("color=black");
-    }
-
-    // Construct the label attribute
-    {
-        stringstream label;
-        label << "label=\"" << get_node_name(node);
-
-        static const bool nvtos = getenv_bool("NGRAPH_VISUALIZE_TREE_OUTPUT_SHAPES");
-        static const bool nvtot = getenv_bool("NGRAPH_VISUALIZE_TREE_OUTPUT_TYPES");
-
-        if (nvtos || nvtot)
-            for (const auto& output : node->outputs())
-            {
-                label << "\\n" << to_string(output.get_index()) << ": ";
-                if (nvtot)
-                    label << "{" << output.get_element_type().get_type_name() << "}";
-                if (nvtos)
-                    label << pretty_partial_shape(output.get_partial_shape());
-            }
-
-        auto eh = m_ops_to_details.find(node->get_type_info());
-        if (eh != m_ops_to_details.end())
-        {
-            eh->second(*node, label);
-        }
-        label << "\"";
-        attributes.push_back(label.str());
-    }
-
-    if (m_node_modifiers)
-    {
-        m_node_modifiers(*node, attributes);
-    }
-
-    stringstream ss;
-    ss << "    " << node->get_name() << " [" << join(attributes, " ") << "]\n";
-
-    return ss.str();
-}
-
-string pass::VisualizeTree::get_node_name(shared_ptr<Node> node)
-{
-    string rc = node->get_friendly_name();
-    if (node->get_friendly_name() != node->get_name())
-    {
-        rc += "\\n" + node->get_name();
-    }
-    return rc;
-}
-
-void pass::VisualizeTree::render() const
-{
-    string ext = file_util::get_file_ext(m_name);
-    string output_format = ext.substr(1);
-    string dot_file = m_name;
-    if (to_lower(ext) != ".dot")
-    {
-        dot_file += ".dot";
-    }
-    ofstream out(dot_file);
-    if (out)
-    {
-        out << "digraph ngraph\n{\n";
-        out << m_ss.str();
-        out << "}\n";
-        out.close();
-
-        if (!m_dot_only && to_lower(ext) != ".dot")
-        {
-#ifndef _WIN32
-            stringstream ss;
-            ss << "dot -T" << output_format << " " << dot_file << " -o" << m_name;
-            auto cmd = ss.str();
-            auto stream = popen(cmd.c_str(), "r");
-            if (stream)
-            {
-                pclose(stream);
-            }
-#endif
-        }
-    }
-}
+// bool pass::VisualizeTree::run_on_function(std::shared_ptr<ngraph::Function> f)
+// {
+//     unordered_map<Node*, HeightMap> height_maps;
+// 
+//     for (auto& node : f->get_ops())
+//     {
+//         if (node->description() == "Result")
+//         {
+//             height_maps[node.get()] = HeightMap({node.get()});
+//         }
+//         else
+//         {
+//             height_maps[node.get()] = HeightMap();
+//         }
+//     }
+// 
+//     auto nodes = topological_sort(f->get_ops());
+// 
+//     for (auto it = nodes.rbegin(); it != nodes.rend(); ++it)
+//     {
+//         auto& node = *it;
+//         for (auto& output : node->outputs())
+//         {
+//             for (auto& input : output.get_target_inputs())
+//             {
+//                 auto target_node = input.get_node();
+//                 height_maps[node.get()].absorb(height_maps[target_node]);
+//             }
+//         }
+//     }
+// 
+//     // TODO(amprocte): Maybe find a way to make this tunable.
+// 
+//     size_t fake_node_ctr = 0;
+// 
+//     traverse_nodes(
+//         f, [&](shared_ptr<Node> node) { add_node_arguments(node, height_maps, fake_node_ctr); });
+// 
+//     render();
+// 
+//     // Clean up local variable not to hold node pointers
+//     m_nodes_with_attributes.clear();
+// 
+//     return false;
+// }
+// 
+// pass::VisualizeTree::VisualizeTree(const string& file_name, node_modifiers_t nm, bool dot_only)
+//     : m_name{file_name}
+//     , m_node_modifiers{nm}
+//     , m_dot_only(dot_only)
+// {
+// }
+// 
+// void pass::VisualizeTree::add_node_arguments(shared_ptr<Node> node,
+//                                              unordered_map<Node*, HeightMap>& height_maps,
+//                                              size_t& fake_node_ctr)
+// {
+//     size_t arg_index = 0;
+//     for (auto input_value : node->input_values())
+//     {
+//         auto arg = input_value.get_node_shared_ptr();
+//         size_t jump_distance = height_maps[arg.get()].max_jump_to(height_maps[node.get()]);
+//         if (is_type<ngraph::op::Constant>(arg) || is_type<ngraph::op::Parameter>(arg))
+//         {
+//             auto clone_name = "CLONE_" + to_string(fake_node_ctr);
+//             auto color = (arg->description() == "Parameter" ? "blue" : "black");
+//             m_ss << "    " << clone_name << "[shape=\"box\" style=\"dashed,filled\" color=\""
+//                  << color << "\" fillcolor=\"white\" label=\"" << get_node_name(arg) << "\n"
+//                  << get_constant_value(arg) << "\"]\n";
+//             m_ss << "    " << clone_name << " -> " << node->get_name()
+//                  << label_edge(arg, node, arg_index, jump_distance) << "\n";
+//             fake_node_ctr++;
+//         }
+//         else if (jump_distance > max_jump_distance)
+//         {
+//             m_ss << add_attributes(arg);
+//             m_ss << add_attributes(node);
+//             auto recv_node_name = "RECV_" + to_string(fake_node_ctr);
+//             auto send_node_name = "SEND_" + to_string(fake_node_ctr);
+//             m_ss << "    " << recv_node_name << "[shape=\"box\" style=\"solid,filled\" "
+//                                                 "fillcolor=\"#ffcccc\" label=\"Receive["
+//                  << arg->get_name() << "]\"]\n";
+//             m_ss << "    " << send_node_name << "[shape=\"box\" style=\"solid,filled\" "
+//                                                 "fillcolor=\"#ccffcc\" label=\"Send["
+//                  << node->get_name() << "]\"]\n";
+//             m_ss << "    " << arg->get_name() << " -> " << send_node_name
+//                  << label_edge(arg, node, arg_index, jump_distance) << "\n";
+//             m_ss << "    " << recv_node_name << " -> " << node->get_name()
+//                  << label_edge(arg, node, arg_index, jump_distance) << "\n";
+//             fake_node_ctr++;
+//         }
+//         else
+//         {
+//             m_ss << add_attributes(arg);
+//             m_ss << add_attributes(node);
+//             m_ss << "    " << arg->get_name() << " -> " << node->get_name()
+//                  << label_edge(arg, node, arg_index, jump_distance) << "\n";
+//         }
+//         arg_index++;
+//     }
+// }
+// 
+// string pass::VisualizeTree::add_attributes(shared_ptr<Node> node)
+// {
+//     string rc;
+//     if (m_nodes_with_attributes.find(node) == m_nodes_with_attributes.end())
+//     {
+//         m_nodes_with_attributes.insert(node);
+//         rc = get_attributes(node);
+//     }
+//     return rc;
+// }
+// 
+// static std::string pretty_partial_shape(const PartialShape& shape)
+// {
+//     std::stringstream ss;
+// 
+//     if (shape.rank().is_dynamic())
+//     {
+//         ss << "?";
+//     }
+//     else
+//     {
+//         bool first = true;
+// 
+//         ss << "[";
+//         for (size_t i = 0; i < shape.rank().get_length(); i++)
+//         {
+//             if (!first)
+//             {
+//                 ss << ",";
+//             }
+//             if (shape[i].is_dynamic())
+//             {
+//                 ss << "?";
+//             }
+//             else
+//             {
+//                 ss << shape[i].get_length();
+//             }
+//             first = false;
+//         }
+//         ss << "]";
+//     }
+// 
+//     return ss.str();
+// }
+// 
+// template <typename T>
+// static std::string pretty_value(const vector<T>& value)
+// {
+//     std::stringstream ss;
+//     bool first = true;
+//     for (const auto& i : value)
+//     {
+//         if (!first)
+//             ss << ", ";
+//         ss << i;
+//         first = false;
+//     }
+//     return ss.str();
+// }
+// 
+// std::string pass::VisualizeTree::get_constant_value(std::shared_ptr<Node> node, size_t max_elements)
+// {
+//     if (!op::is_constant(node))
+//         return {};
+//     std::stringstream ss;
+//     ss << "{" << node->get_element_type().get_type_name() << "}";
+//     ss << pretty_partial_shape(node->get_output_partial_shape(0));
+// 
+//     if (ngraph::shape_size(node->get_shape()) > max_elements)
+//         return ss.str();
+// 
+//     ss << "\nvalue: ";
+//     const auto constant = as_type_ptr<op::Constant>(node);
+//     switch (constant->get_output_element_type(0))
+//     {
+//     case element::Type_t::undefined: ss << "[ undefined value ]"; break;
+//     case element::Type_t::dynamic: ss << "[ dynamic value ]"; break;
+//     case element::Type_t::u1: ss << "[ u1 value ]"; break;
+//     case element::Type_t::bf16:
+//     case element::Type_t::f16:
+//     case element::Type_t::f32:
+//     case element::Type_t::f64:
+//         ss << "[" << pretty_value(constant->cast_vector<double>()) << "]";
+//         break;
+//     case element::Type_t::i8:
+//     case element::Type_t::i16:
+//     case element::Type_t::i32:
+//     case element::Type_t::i64:
+//         ss << "[" << pretty_value(constant->cast_vector<int64_t>()) << "]";
+//         break;
+//     case element::Type_t::boolean:
+//     case element::Type_t::u8:
+//     case element::Type_t::u16:
+//     case element::Type_t::u32:
+//     case element::Type_t::u64:
+//         ss << "[" << pretty_value(constant->cast_vector<uint64_t>()) << "]";
+//         break;
+//     }
+//     return ss.str();
+// }
+// 
+// string pass::VisualizeTree::get_attributes(shared_ptr<Node> node)
+// {
+//     vector<string> attributes;
+//     attributes.push_back("shape=box");
+// 
+//     if (ngraph::op::is_output(node))
+//     {
+//         attributes.push_back("color=crimson");
+//         attributes.push_back("penwidth=1.5");
+//     }
+//     else
+//     {
+//         attributes.push_back("color=black");
+//     }
+// 
+//     // Construct the label attribute
+//     {
+//         stringstream label;
+//         label << "label=\"" << get_node_name(node);
+// 
+//         static const bool nvtos = getenv_bool("NGRAPH_VISUALIZE_TREE_OUTPUT_SHAPES");
+//         static const bool nvtot = getenv_bool("NGRAPH_VISUALIZE_TREE_OUTPUT_TYPES");
+// 
+//         if (nvtos || nvtot)
+//             for (const auto& output : node->outputs())
+//             {
+//                 label << "\\n" << to_string(output.get_index()) << ": ";
+//                 if (nvtot)
+//                     label << "{" << output.get_element_type().get_type_name() << "}";
+//                 if (nvtos)
+//                     label << pretty_partial_shape(output.get_partial_shape());
+//             }
+// 
+//         auto eh = m_ops_to_details.find(node->get_type_info());
+//         if (eh != m_ops_to_details.end())
+//         {
+//             eh->second(*node, label);
+//         }
+//         label << "\"";
+//         attributes.push_back(label.str());
+//     }
+// 
+//     if (m_node_modifiers)
+//     {
+//         m_node_modifiers(*node, attributes);
+//     }
+// 
+//     stringstream ss;
+//     ss << "    " << node->get_name() << " [" << join(attributes, " ") << "]\n";
+// 
+//     return ss.str();
+// }
+// 
+// string pass::VisualizeTree::get_node_name(shared_ptr<Node> node)
+// {
+//     string rc = node->get_friendly_name();
+//     if (node->get_friendly_name() != node->get_name())
+//     {
+//         rc += "\\n" + node->get_name();
+//     }
+//     return rc;
+// }
+// 
+// void pass::VisualizeTree::render() const
+// {
+//     string ext = file_util::get_file_ext(m_name);
+//     string output_format = ext.substr(1);
+//     string dot_file = m_name;
+//     if (to_lower(ext) != ".dot")
+//     {
+//         dot_file += ".dot";
+//     }
+//     ofstream out(dot_file);
+//     if (out)
+//     {
+//         out << "digraph ngraph\n{\n";
+//         out << m_ss.str();
+//         out << "}\n";
+//         out.close();
+// 
+//         if (!m_dot_only && to_lower(ext) != ".dot")
+//         {
+// #ifndef _WIN32
+//             stringstream ss;
+//             ss << "dot -T" << output_format << " " << dot_file << " -o" << m_name;
+//             auto cmd = ss.str();
+//             auto stream = popen(cmd.c_str(), "r");
+//             if (stream)
+//             {
+//                 pclose(stream);
+//             }
+// #endif
+//         }
+//     }
+// }

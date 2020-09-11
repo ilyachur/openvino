@@ -46,19 +46,19 @@ namespace ngraph
                 /// \param max - the upper bound of the <min;max> range
                 Clamp(const Output<Node>& data, const double min, const double max);
 
-                void pre_validate_and_infer_types() override;
+                // void pre_validate_and_infer_types() override;
 
-                virtual OutputVector decompose_op() const override;
+                // virtual OutputVector decompose_op() const override;
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
 
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
 
                 double get_min() const { return m_min; }
                 double get_max() const { return m_max; }
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
 
             private:
                 double m_min;

@@ -67,7 +67,7 @@ namespace ngraph
                 /// \param arg1 The node producing the second argument.
                 Dot(const Output<Node>& arg0, const Output<Node>& arg1);
 
-                void validate_and_infer_types() override;
+                // void validate_and_infer_types() override;
 
                 virtual std::shared_ptr<Node> get_default_value() const override;
 

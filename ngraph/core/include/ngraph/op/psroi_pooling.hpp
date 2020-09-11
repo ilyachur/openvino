@@ -51,8 +51,8 @@ namespace ngraph
                              int spatial_bins_y,
                              const std::string& mode);
 
-                bool visit_attributes(AttributeVisitor& visitor) override;
-                void validate_and_infer_types() override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
+                // void validate_and_infer_types() override;
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;

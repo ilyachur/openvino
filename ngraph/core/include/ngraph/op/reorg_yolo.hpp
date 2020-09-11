@@ -36,9 +36,9 @@ namespace ngraph
                 /// \param strides        Stride to reorganize input by
                 ReorgYolo(const Output<Node>& input, const Strides& strides);
 
-                void validate_and_infer_types() override;
-
-                virtual bool visit_attributes(AttributeVisitor& visitor) override;
+                // void validate_and_infer_types() override;
+                // 
+                // virtual bool visit_attributes(AttributeVisitor& visitor) override;
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;

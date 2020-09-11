@@ -39,8 +39,8 @@ namespace ngraph
                 /// \param destination_type  Element type for the output tensor.
                 Convert(const Output<Node>& arg, const ngraph::element::Type& destination_type);
 
-                void validate_and_infer_types() override;
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // void validate_and_infer_types() override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
                 const element::Type& get_destination_type() const { return m_destination_type; }
@@ -54,8 +54,8 @@ namespace ngraph
                     m_destination_type = destination_type;
                 }
 
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
 
             protected:
                 ngraph::element::Type m_destination_type;

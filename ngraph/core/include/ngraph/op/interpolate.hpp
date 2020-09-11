@@ -74,9 +74,9 @@ namespace ngraph
                 Interpolate(const Output<Node>& image,
                             const Output<Node>& output_shape,
                             const InterpolateAttrs& attrs);
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
 
-                void validate_and_infer_types() override;
+                // void validate_and_infer_types() override;
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
@@ -224,14 +224,14 @@ namespace ngraph
                             const Output<Node>& scales,
                             const Output<Node>& axes,
                             const InterpolateAttrs& attrs);
-                bool visit_attributes(AttributeVisitor& visitor) override;
-
-                void validate_and_infer_types() override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
+                // 
+                // void validate_and_infer_types() override;
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
 
                 const InterpolateAttrs& get_attrs() const { return m_attrs; }
             protected:

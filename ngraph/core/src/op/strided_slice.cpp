@@ -106,100 +106,100 @@ op::v1::StridedSlice::StridedSlice(const Output<Node>& data,
 {
 }
 
-bool ngraph::op::v1::StridedSlice::visit_attributes(AttributeVisitor& visitor)
-{
-    visitor.on_attribute("begin_mask", m_begin_mask);
-    visitor.on_attribute("end_mask", m_end_mask);
-    visitor.on_attribute("new_axis_mask", m_new_axis_mask);
-    visitor.on_attribute("shrink_axis_mask", m_shrink_axis_mask);
-    visitor.on_attribute("ellipsis_mask", m_ellipsis_mask);
-    return true;
-}
-
-void op::v1::StridedSlice::validate_and_infer_types()
-{
-    const auto& begin_mask_et = get_input_element_type(1);
-    const auto& end_mask_et = get_input_element_type(2);
-    NODE_VALIDATION_CHECK(this,
-                          begin_mask_et.is_integral_number(),
-                          "Begin mask must be an integral number, but is: ",
-                          begin_mask_et);
-    NODE_VALIDATION_CHECK(this,
-                          end_mask_et.is_integral_number(),
-                          "End mask must be an integral number, but is: ",
-                          end_mask_et);
-
-    auto are_mask_elem_in_range = [](size_t e) { return e == 0 || e == 1; };
-    NODE_VALIDATION_CHECK(
-        this,
-        std::all_of(m_begin_mask.begin(), m_begin_mask.end(), are_mask_elem_in_range) &&
-            std::all_of(m_end_mask.begin(), m_end_mask.end(), are_mask_elem_in_range) &&
-            std::all_of(m_new_axis_mask.begin(), m_new_axis_mask.end(), are_mask_elem_in_range) &&
-            std::all_of(
-                m_shrink_axis_mask.begin(), m_shrink_axis_mask.end(), are_mask_elem_in_range) &&
-            std::all_of(m_ellipsis_mask.begin(), m_ellipsis_mask.end(), are_mask_elem_in_range),
-        "All masks of StridedSlice must have be 0 or 1");
-
-    const vector<size_t> attr_sizes = {m_begin_mask.size(),
-                                       m_end_mask.size(),
-                                       m_new_axis_mask.size(),
-                                       m_shrink_axis_mask.size(),
-                                       m_ellipsis_mask.size()};
-    const auto are_attr_sizes_eq =
-        std::all_of(attr_sizes.begin(), attr_sizes.end(), [&attr_sizes](size_t s) {
-            return (s == 0) || (attr_sizes[0] == s);
-        });
-    NODE_VALIDATION_CHECK(
-        this, are_attr_sizes_eq, "All masks of StridedSlice must have the same size");
-
-    const auto& data_rank = get_input_partial_shape(0).rank();
-    const auto& begin_shape = get_input_partial_shape(1);
-    if (begin_shape.rank().is_static())
-    {
-        NODE_VALIDATION_CHECK(this,
-                              begin_shape.rank().get_length() == 1,
-                              "Begin input must be 1D (begin rank: ",
-                              begin_shape.rank(),
-                              ").");
-    }
-    const auto& end_shape = get_input_partial_shape(2);
-    if (end_shape.rank().is_static())
-    {
-        NODE_VALIDATION_CHECK(this,
-                              end_shape.rank().get_length() == 1,
-                              "End input must be 1D (end rank: ",
-                              end_shape.rank(),
-                              ").");
-    }
-
-    set_input_is_relevant_to_shape(1);
-    set_input_is_relevant_to_shape(2);
-    set_input_is_relevant_to_shape(3);
-
-    auto begin_const = as_type_ptr<op::Constant>(input_value(1).get_node_shared_ptr());
-    auto end_const = as_type_ptr<op::Constant>(input_value(2).get_node_shared_ptr());
-    auto strides = as_type_ptr<op::Constant>(input_value(3).get_node_shared_ptr());
-
-    if (begin_const && end_const && strides)
-    {
-        set_output_type(0,
-                        get_input_element_type(0),
-                        infer_slice_shape(this,
-                                          get_input_partial_shape(0),
-                                          begin_const->cast_vector<int64_t>(),
-                                          end_const->cast_vector<int64_t>(),
-                                          strides->cast_vector<int64_t>(),
-                                          convert_mask_to_axis_set(get_begin_mask()),
-                                          convert_mask_to_axis_set(get_end_mask()),
-                                          convert_mask_to_axis_set(get_new_axis_mask()),
-                                          convert_mask_to_axis_set(get_shrink_axis_mask()),
-                                          convert_mask_to_axis_set(get_ellipsis_mask())));
-    }
-    else
-    {
-        set_output_type(0, get_input_element_type(0), PartialShape::dynamic(data_rank));
-    }
-}
+// bool ngraph::op::v1::StridedSlice::visit_attributes(AttributeVisitor& visitor)
+// {
+//     visitor.on_attribute("begin_mask", m_begin_mask);
+//     visitor.on_attribute("end_mask", m_end_mask);
+//     visitor.on_attribute("new_axis_mask", m_new_axis_mask);
+//     visitor.on_attribute("shrink_axis_mask", m_shrink_axis_mask);
+//     visitor.on_attribute("ellipsis_mask", m_ellipsis_mask);
+//     return true;
+// }
+// 
+// void op::v1::StridedSlice::validate_and_infer_types()
+// {
+//     const auto& begin_mask_et = get_input_element_type(1);
+//     const auto& end_mask_et = get_input_element_type(2);
+//     NODE_VALIDATION_CHECK(this,
+//                           begin_mask_et.is_integral_number(),
+//                           "Begin mask must be an integral number, but is: ",
+//                           begin_mask_et);
+//     NODE_VALIDATION_CHECK(this,
+//                           end_mask_et.is_integral_number(),
+//                           "End mask must be an integral number, but is: ",
+//                           end_mask_et);
+// 
+//     auto are_mask_elem_in_range = [](size_t e) { return e == 0 || e == 1; };
+//     NODE_VALIDATION_CHECK(
+//         this,
+//         std::all_of(m_begin_mask.begin(), m_begin_mask.end(), are_mask_elem_in_range) &&
+//             std::all_of(m_end_mask.begin(), m_end_mask.end(), are_mask_elem_in_range) &&
+//             std::all_of(m_new_axis_mask.begin(), m_new_axis_mask.end(), are_mask_elem_in_range) &&
+//             std::all_of(
+//                 m_shrink_axis_mask.begin(), m_shrink_axis_mask.end(), are_mask_elem_in_range) &&
+//             std::all_of(m_ellipsis_mask.begin(), m_ellipsis_mask.end(), are_mask_elem_in_range),
+//         "All masks of StridedSlice must have be 0 or 1");
+// 
+//     const vector<size_t> attr_sizes = {m_begin_mask.size(),
+//                                        m_end_mask.size(),
+//                                        m_new_axis_mask.size(),
+//                                        m_shrink_axis_mask.size(),
+//                                        m_ellipsis_mask.size()};
+//     const auto are_attr_sizes_eq =
+//         std::all_of(attr_sizes.begin(), attr_sizes.end(), [&attr_sizes](size_t s) {
+//             return (s == 0) || (attr_sizes[0] == s);
+//         });
+//     NODE_VALIDATION_CHECK(
+//         this, are_attr_sizes_eq, "All masks of StridedSlice must have the same size");
+// 
+//     const auto& data_rank = get_input_partial_shape(0).rank();
+//     const auto& begin_shape = get_input_partial_shape(1);
+//     if (begin_shape.rank().is_static())
+//     {
+//         NODE_VALIDATION_CHECK(this,
+//                               begin_shape.rank().get_length() == 1,
+//                               "Begin input must be 1D (begin rank: ",
+//                               begin_shape.rank(),
+//                               ").");
+//     }
+//     const auto& end_shape = get_input_partial_shape(2);
+//     if (end_shape.rank().is_static())
+//     {
+//         NODE_VALIDATION_CHECK(this,
+//                               end_shape.rank().get_length() == 1,
+//                               "End input must be 1D (end rank: ",
+//                               end_shape.rank(),
+//                               ").");
+//     }
+// 
+//     set_input_is_relevant_to_shape(1);
+//     set_input_is_relevant_to_shape(2);
+//     set_input_is_relevant_to_shape(3);
+// 
+//     auto begin_const = as_type_ptr<op::Constant>(input_value(1).get_node_shared_ptr());
+//     auto end_const = as_type_ptr<op::Constant>(input_value(2).get_node_shared_ptr());
+//     auto strides = as_type_ptr<op::Constant>(input_value(3).get_node_shared_ptr());
+// 
+//     if (begin_const && end_const && strides)
+//     {
+//         set_output_type(0,
+//                         get_input_element_type(0),
+//                         infer_slice_shape(this,
+//                                           get_input_partial_shape(0),
+//                                           begin_const->cast_vector<int64_t>(),
+//                                           end_const->cast_vector<int64_t>(),
+//                                           strides->cast_vector<int64_t>(),
+//                                           convert_mask_to_axis_set(get_begin_mask()),
+//                                           convert_mask_to_axis_set(get_end_mask()),
+//                                           convert_mask_to_axis_set(get_new_axis_mask()),
+//                                           convert_mask_to_axis_set(get_shrink_axis_mask()),
+//                                           convert_mask_to_axis_set(get_ellipsis_mask())));
+//     }
+//     else
+//     {
+//         set_output_type(0, get_input_element_type(0), PartialShape::dynamic(data_rank));
+//     }
+// }
 
 AxisSet op::v1::StridedSlice::convert_mask_to_axis_set(const std::vector<int64_t>& mask) const
 {
@@ -228,60 +228,60 @@ shared_ptr<Node> op::v1::StridedSlice::clone_with_new_inputs(const OutputVector&
                                          m_ellipsis_mask);
 }
 
-namespace
-{
-    inline bool evaluate(const HostTensorPtr& in, const SlicePlan& sp, const HostTensorPtr& out)
-
-    {
-        auto in_shape = in->get_shape();
-        out->set_shape(sp.reshape_out_shape);
-        runtime::reference::strided_slice(in->get_data_ptr<char>(),
-                                          out->get_data_ptr<char>(),
-                                          in_shape,
-                                          sp,
-                                          in->get_element_type().size());
-        return true;
-    }
-
-    bool evaluate_strided_slice(const HostTensorPtr& in,
-                                const HostTensorPtr& begin,
-                                const HostTensorPtr& end,
-                                const HostTensorPtr& stride,
-                                const AxisSet& begin_mask,
-                                const AxisSet& end_mask,
-                                const AxisSet& new_axis_mask,
-                                const AxisSet& shrink_axis_mask,
-                                const AxisSet& ellipsis_mask,
-                                const HostTensorPtr& out)
-    {
-        std::vector<int64_t> begin_const = read_vector<int64_t>(begin);
-        std::vector<int64_t> end_const = read_vector<int64_t>(end);
-        std::vector<int64_t> stride_const = read_vector<int64_t>(stride);
-        SlicePlan slice_plan = make_slice_plan(in->get_shape(),
-                                               begin_const,
-                                               end_const,
-                                               stride_const,
-                                               begin_mask,
-                                               end_mask,
-                                               new_axis_mask,
-                                               shrink_axis_mask,
-                                               ellipsis_mask);
-        return evaluate(in, slice_plan, out);
-    }
-}
-
-bool op::v1::StridedSlice::evaluate(const HostTensorVector& output_values,
-                                    const HostTensorVector& input_values) const
-{
-    OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::v1::StridedSlice::evaluate");
-    return evaluate_strided_slice(input_values[0],
-                                  input_values[1],
-                                  input_values[2],
-                                  input_values[3],
-                                  convert_mask_to_axis_set(get_begin_mask()),
-                                  convert_mask_to_axis_set(get_end_mask()),
-                                  convert_mask_to_axis_set(get_new_axis_mask()),
-                                  convert_mask_to_axis_set(get_shrink_axis_mask()),
-                                  convert_mask_to_axis_set(get_ellipsis_mask()),
-                                  output_values[0]);
-}
+// namespace
+// {
+//     inline bool evaluate(const HostTensorPtr& in, const SlicePlan& sp, const HostTensorPtr& out)
+// 
+//     {
+//         auto in_shape = in->get_shape();
+//         out->set_shape(sp.reshape_out_shape);
+//         runtime::reference::strided_slice(in->get_data_ptr<char>(),
+//                                           out->get_data_ptr<char>(),
+//                                           in_shape,
+//                                           sp,
+//                                           in->get_element_type().size());
+//         return true;
+//     }
+// 
+//     bool evaluate_strided_slice(const HostTensorPtr& in,
+//                                 const HostTensorPtr& begin,
+//                                 const HostTensorPtr& end,
+//                                 const HostTensorPtr& stride,
+//                                 const AxisSet& begin_mask,
+//                                 const AxisSet& end_mask,
+//                                 const AxisSet& new_axis_mask,
+//                                 const AxisSet& shrink_axis_mask,
+//                                 const AxisSet& ellipsis_mask,
+//                                 const HostTensorPtr& out)
+//     {
+//         std::vector<int64_t> begin_const = read_vector<int64_t>(begin);
+//         std::vector<int64_t> end_const = read_vector<int64_t>(end);
+//         std::vector<int64_t> stride_const = read_vector<int64_t>(stride);
+//         SlicePlan slice_plan = make_slice_plan(in->get_shape(),
+//                                                begin_const,
+//                                                end_const,
+//                                                stride_const,
+//                                                begin_mask,
+//                                                end_mask,
+//                                                new_axis_mask,
+//                                                shrink_axis_mask,
+//                                                ellipsis_mask);
+//         return evaluate(in, slice_plan, out);
+//     }
+// }
+// 
+// bool op::v1::StridedSlice::evaluate(const HostTensorVector& output_values,
+//                                     const HostTensorVector& input_values) const
+// {
+//     OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::v1::StridedSlice::evaluate");
+//     return evaluate_strided_slice(input_values[0],
+//                                   input_values[1],
+//                                   input_values[2],
+//                                   input_values[3],
+//                                   convert_mask_to_axis_set(get_begin_mask()),
+//                                   convert_mask_to_axis_set(get_end_mask()),
+//                                   convert_mask_to_axis_set(get_new_axis_mask()),
+//                                   convert_mask_to_axis_set(get_shrink_axis_mask()),
+//                                   convert_mask_to_axis_set(get_ellipsis_mask()),
+//                                   output_values[0]);
+// }

@@ -44,16 +44,16 @@ namespace ngraph
                 /// \param slope Multipliers for negative values
                 PRelu(const Output<Node>& data, const Output<Node>& slope);
 
-                bool visit_attributes(AttributeVisitor& visitor) override;
-                virtual OutputVector decompose_op() const override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
+                // virtual OutputVector decompose_op() const override;
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
 
-                void pre_validate_and_infer_types() override;
+                // void pre_validate_and_infer_types() override;
 
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
             };
         }
         using v0::PRelu;

@@ -37,34 +37,34 @@ op::BatchNormInference::BatchNormInference(const Output<Node>& input,
     constructor_validate_and_infer_types();
 }
 
-bool op::BatchNormInference::visit_attributes(AttributeVisitor& visitor)
-{
-    visitor.on_attribute("epsilon", m_epsilon);
-    return true;
-}
-
-void op::BatchNormInference::validate_and_infer_types()
-{
-    element::Type result_et;
-    PartialShape result_batch_shape;
-    PartialShape result_channel_shape; // unused here
-
-    set_output_size(1);
-    std::tie(result_et, result_batch_shape, result_channel_shape) =
-        infer_batch_norm_forward(this,
-                                 get_input_element_type(INPUT_DATA),
-                                 get_input_element_type(INPUT_GAMMA),
-                                 get_input_element_type(INPUT_BETA),
-                                 get_input_element_type(INPUT_MEAN),
-                                 get_input_element_type(INPUT_VARIANCE),
-                                 get_input_partial_shape(INPUT_DATA),
-                                 get_input_partial_shape(INPUT_GAMMA),
-                                 get_input_partial_shape(INPUT_BETA),
-                                 get_input_partial_shape(INPUT_MEAN),
-                                 get_input_partial_shape(INPUT_VARIANCE));
-
-    set_output_type(0, result_et, result_batch_shape);
-}
+// bool op::BatchNormInference::visit_attributes(AttributeVisitor& visitor)
+// {
+//     visitor.on_attribute("epsilon", m_epsilon);
+//     return true;
+// }
+// 
+// void op::BatchNormInference::validate_and_infer_types()
+// {
+//     element::Type result_et;
+//     PartialShape result_batch_shape;
+//     PartialShape result_channel_shape; // unused here
+// 
+//     set_output_size(1);
+//     std::tie(result_et, result_batch_shape, result_channel_shape) =
+//         infer_batch_norm_forward(this,
+//                                  get_input_element_type(INPUT_DATA),
+//                                  get_input_element_type(INPUT_GAMMA),
+//                                  get_input_element_type(INPUT_BETA),
+//                                  get_input_element_type(INPUT_MEAN),
+//                                  get_input_element_type(INPUT_VARIANCE),
+//                                  get_input_partial_shape(INPUT_DATA),
+//                                  get_input_partial_shape(INPUT_GAMMA),
+//                                  get_input_partial_shape(INPUT_BETA),
+//                                  get_input_partial_shape(INPUT_MEAN),
+//                                  get_input_partial_shape(INPUT_VARIANCE));
+// 
+//     set_output_type(0, result_et, result_batch_shape);
+// }
 
 std::shared_ptr<Node>
     op::BatchNormInference::clone_with_new_inputs(const OutputVector& new_args) const

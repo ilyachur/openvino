@@ -37,8 +37,8 @@ namespace ngraph
                 /// \param like  Node which provides the target type information for the conversion.
                 ConvertLike(const Output<Node>& data, const Output<Node>& like);
 
-                void validate_and_infer_types() override;
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // void validate_and_infer_types() override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;

@@ -53,8 +53,8 @@ namespace ngraph
 
                 EmbeddingBagPackedBase(const Output<Node>& emb_table, const Output<Node>& indices);
 
-                void validate_and_infer_types() override;
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // void validate_and_infer_types() override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
 
             private:
                 static constexpr int EMB_TABLE = 0;

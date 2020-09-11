@@ -40,42 +40,42 @@ shared_ptr<Node> op::v3::Asinh::clone_with_new_inputs(const OutputVector& new_ar
     return make_shared<Asinh>(new_args.at(0));
 }
 
-namespace
-{
-    template <element::Type_t ET>
-    bool evaluate(const HostTensorPtr& arg0, const HostTensorPtr& out)
-    {
-        runtime::reference::asinh(
-            arg0->get_data_ptr<ET>(), out->get_data_ptr<ET>(), shape_size(arg0->get_shape()));
-        return true;
-    }
-
-    bool evaluate_asinh(const HostTensorPtr& arg0, const HostTensorPtr& out)
-    {
-        bool rc = true;
-        out->set_unary(arg0);
-        switch (arg0->get_element_type())
-        {
-            TYPE_CASE(i32)(arg0, out);
-            break;
-            TYPE_CASE(i64)(arg0, out);
-            break;
-            TYPE_CASE(u32)(arg0, out);
-            break;
-            TYPE_CASE(u64)(arg0, out);
-            break;
-            TYPE_CASE(f16)(arg0, out);
-            break;
-            TYPE_CASE(f32)(arg0, out);
-            break;
-        default: rc = false; break;
-        }
-        return rc;
-    }
-}
-
-bool op::v3::Asinh::evaluate(const HostTensorVector& outputs, const HostTensorVector& inputs) const
-{
-    OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::v3::Asinh::evaluate");
-    return evaluate_asinh(inputs[0], outputs[0]);
-}
+// namespace
+// {
+//     template <element::Type_t ET>
+//     bool evaluate(const HostTensorPtr& arg0, const HostTensorPtr& out)
+//     {
+//         runtime::reference::asinh(
+//             arg0->get_data_ptr<ET>(), out->get_data_ptr<ET>(), shape_size(arg0->get_shape()));
+//         return true;
+//     }
+// 
+//     bool evaluate_asinh(const HostTensorPtr& arg0, const HostTensorPtr& out)
+//     {
+//         bool rc = true;
+//         out->set_unary(arg0);
+//         switch (arg0->get_element_type())
+//         {
+//             TYPE_CASE(i32)(arg0, out);
+//             break;
+//             TYPE_CASE(i64)(arg0, out);
+//             break;
+//             TYPE_CASE(u32)(arg0, out);
+//             break;
+//             TYPE_CASE(u64)(arg0, out);
+//             break;
+//             TYPE_CASE(f16)(arg0, out);
+//             break;
+//             TYPE_CASE(f32)(arg0, out);
+//             break;
+//         default: rc = false; break;
+//         }
+//         return rc;
+//     }
+// }
+// 
+// bool op::v3::Asinh::evaluate(const HostTensorVector& outputs, const HostTensorVector& inputs) const
+// {
+//     OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::v3::Asinh::evaluate");
+//     return evaluate_asinh(inputs[0], outputs[0]);
+// }

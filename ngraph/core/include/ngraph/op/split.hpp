@@ -63,9 +63,9 @@ namespace ngraph
                       const Output<Node>& axis,
                       const std::vector<size_t>& splits);
 
-                void pre_validate_and_infer_types() override;
+                // void pre_validate_and_infer_types() override;
 
-                virtual OutputVector decompose_op() const override;
+                // virtual OutputVector decompose_op() const override;
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
@@ -101,15 +101,15 @@ namespace ngraph
                 ///                    split into.
                 Split(const Output<Node>& data, const Output<Node>& axis, const size_t num_splits);
 
-                bool visit_attributes(AttributeVisitor& visitor) override;
-                void validate_and_infer_types() override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
+                // void validate_and_infer_types() override;
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
 
                 size_t get_num_splits() const { return m_num_splits; }
                 void set_num_splits(const size_t num_splits) { m_num_splits = num_splits; }
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
 
             protected:
                 size_t m_num_splits;

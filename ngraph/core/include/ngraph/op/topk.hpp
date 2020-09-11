@@ -89,7 +89,7 @@ namespace ngraph
                      bool compute_max = true,
                      SortType sort = SortType::NONE);
 
-                void validate_and_infer_types() override;
+                // void validate_and_infer_types() override;
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
@@ -105,8 +105,8 @@ namespace ngraph
                 bool get_compute_max() const { return m_compute_max; }
                 SortType get_sort() const { return m_sort; }
                 size_t get_default_output_index() const override { return no_default_index(); }
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
 
             protected:
                 element::Type m_index_element_type;
@@ -159,8 +159,8 @@ namespace ngraph
                      const SortType sort,
                      const element::Type& index_element_type = element::i32);
 
-                bool visit_attributes(AttributeVisitor& visitor) override;
-                void validate_and_infer_types() override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
+                // void validate_and_infer_types() override;
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
@@ -189,8 +189,8 @@ namespace ngraph
                 size_t get_k() const;
                 void set_k(size_t k);
                 size_t get_default_output_index() const override { return no_default_index(); }
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
 
             protected:
                 int64_t m_axis;
@@ -247,13 +247,13 @@ namespace ngraph
                      const Mode mode,
                      const SortType sort,
                      const element::Type& index_element_type = element::i32);
-                bool visit_attributes(AttributeVisitor& visitor) override;
-                void validate_and_infer_types() override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
+                // void validate_and_infer_types() override;
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
 
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
 
             protected:
                 virtual size_t

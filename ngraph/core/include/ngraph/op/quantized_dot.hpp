@@ -72,7 +72,7 @@ namespace ngraph
                 {
                     m_reduction_axes_count = reduction_axes_count;
                 }
-                void validate_and_infer_types() override;
+                // void validate_and_infer_types() override;
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
 

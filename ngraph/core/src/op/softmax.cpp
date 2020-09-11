@@ -84,45 +84,45 @@ void op::v0::Softmax::set_axes(const AxisSet& axes)
     replace_provenance_group_member(current_const, replacement_const);
 }
 
-void op::v0::Softmax::validate_and_infer_types()
-{
-    const PartialShape& input_shape = get_input_partial_shape(0);
-
-    if (input_shape.is_dynamic())
-    {
-        set_output_type(0, get_input_element_type(0), input_shape);
-    }
-    else
-    {
-        set_output_type(0, get_input_element_type(0), input_shape.to_shape());
-
-        if (are_axes_constant())
-        {
-            auto m_axes = get_axes();
-            for (auto axis : m_axes)
-            {
-                NODE_VALIDATION_CHECK(this,
-                                      axis < input_shape.rank().get_length(),
-                                      "Reduction axis (",
-                                      axis,
-                                      ") is out of bounds (argument shape: ",
-                                      input_shape,
-                                      ").");
-            }
-            // empty axes == all axes
-            if (m_axes.size() == 0)
-            {
-                for (size_t i = 0; i < get_shape().size(); ++i)
-                {
-                    m_axes.insert(i);
-                }
-                set_axes(m_axes);
-            }
-        }
-    }
-
-    set_input_is_relevant_to_shape(1);
-}
+// void op::v0::Softmax::validate_and_infer_types()
+// {
+//     const PartialShape& input_shape = get_input_partial_shape(0);
+// 
+//     if (input_shape.is_dynamic())
+//     {
+//         set_output_type(0, get_input_element_type(0), input_shape);
+//     }
+//     else
+//     {
+//         set_output_type(0, get_input_element_type(0), input_shape.to_shape());
+// 
+//         if (are_axes_constant())
+//         {
+//             auto m_axes = get_axes();
+//             for (auto axis : m_axes)
+//             {
+//                 NODE_VALIDATION_CHECK(this,
+//                                       axis < input_shape.rank().get_length(),
+//                                       "Reduction axis (",
+//                                       axis,
+//                                       ") is out of bounds (argument shape: ",
+//                                       input_shape,
+//                                       ").");
+//             }
+//             // empty axes == all axes
+//             if (m_axes.size() == 0)
+//             {
+//                 for (size_t i = 0; i < get_shape().size(); ++i)
+//                 {
+//                     m_axes.insert(i);
+//                 }
+//                 set_axes(m_axes);
+//             }
+//         }
+//     }
+// 
+//     set_input_is_relevant_to_shape(1);
+// }
 
 shared_ptr<Node> op::v0::Softmax::clone_with_new_inputs(const OutputVector& new_args) const
 {
@@ -130,36 +130,36 @@ shared_ptr<Node> op::v0::Softmax::clone_with_new_inputs(const OutputVector& new_
     return make_shared<Softmax>(new_args.at(0), new_args.at(1));
 }
 
-namespace
-{
-    template <element::Type_t ET>
-    inline bool try_evaluate_softmax(const HostTensorPtr& arg,
-                                     const HostTensorPtr& out,
-                                     const Shape& shape,
-                                     const AxisSet& axes)
-    {
-        return (ET == arg->get_element_type()) &&
-               (runtime::reference::softmax(
-                    arg->get_data_ptr<ET>(), out->get_data_ptr<ET>(), shape, axes),
-                true);
-    }
-
-    bool evaluate_softmax(const HostTensorPtr& arg, const HostTensorPtr& out, const AxisSet& axes)
-    {
-        auto shape = out->get_shape();
-        return try_evaluate_softmax<element::Type_t::f16>(arg, out, shape, axes) ||
-               try_evaluate_softmax<element::Type_t::f32>(arg, out, shape, axes) ||
-               try_evaluate_softmax<element::Type_t::f64>(arg, out, shape, axes);
-    }
-}
-
-bool op::v0::Softmax::evaluate(const HostTensorVector& outputs,
-                               const HostTensorVector& inputs) const
-{
-    OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::v0::Softmax::evaluate");
-    outputs[0]->set_unary(inputs[0]);
-    return evaluate_softmax(inputs[0], outputs[0], get_axes());
-}
+// namespace
+// {
+//     template <element::Type_t ET>
+//     inline bool try_evaluate_softmax(const HostTensorPtr& arg,
+//                                      const HostTensorPtr& out,
+//                                      const Shape& shape,
+//                                      const AxisSet& axes)
+//     {
+//         return (ET == arg->get_element_type()) &&
+//                (runtime::reference::softmax(
+//                     arg->get_data_ptr<ET>(), out->get_data_ptr<ET>(), shape, axes),
+//                 true);
+//     }
+// 
+//     bool evaluate_softmax(const HostTensorPtr& arg, const HostTensorPtr& out, const AxisSet& axes)
+//     {
+//         auto shape = out->get_shape();
+//         return try_evaluate_softmax<element::Type_t::f16>(arg, out, shape, axes) ||
+//                try_evaluate_softmax<element::Type_t::f32>(arg, out, shape, axes) ||
+//                try_evaluate_softmax<element::Type_t::f64>(arg, out, shape, axes);
+//     }
+// }
+// 
+// bool op::v0::Softmax::evaluate(const HostTensorVector& outputs,
+//                                const HostTensorVector& inputs) const
+// {
+//     OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::v0::Softmax::evaluate");
+//     outputs[0]->set_unary(inputs[0]);
+//     return evaluate_softmax(inputs[0], outputs[0], get_axes());
+// }
 
 // *** SOFTMAX OP SET V1 ***
 constexpr NodeTypeInfo op::v1::Softmax::type_info;
@@ -171,26 +171,26 @@ op::v1::Softmax::Softmax(const Output<Node>& arg, const size_t axis)
     constructor_validate_and_infer_types();
 }
 
-bool ngraph::op::v1::Softmax::visit_attributes(AttributeVisitor& visitor)
-{
-    visitor.on_attribute("axis", m_axis);
-    return true;
-}
-
-void op::v1::Softmax::validate_and_infer_types()
-{
-    const PartialShape& input_shape = get_input_partial_shape(0);
-    if (input_shape.rank().is_static())
-        NODE_VALIDATION_CHECK(this,
-                              m_axis < input_shape.rank().get_length(),
-                              "Reduction axis (",
-                              m_axis,
-                              ") is out of bounds (argument shape: ",
-                              input_shape,
-                              ").");
-
-    set_output_type(0, get_input_element_type(0), input_shape);
-}
+// bool ngraph::op::v1::Softmax::visit_attributes(AttributeVisitor& visitor)
+// {
+//     visitor.on_attribute("axis", m_axis);
+//     return true;
+// }
+// 
+// void op::v1::Softmax::validate_and_infer_types()
+// {
+//     const PartialShape& input_shape = get_input_partial_shape(0);
+//     if (input_shape.rank().is_static())
+//         NODE_VALIDATION_CHECK(this,
+//                               m_axis < input_shape.rank().get_length(),
+//                               "Reduction axis (",
+//                               m_axis,
+//                               ") is out of bounds (argument shape: ",
+//                               input_shape,
+//                               ").");
+// 
+//     set_output_type(0, get_input_element_type(0), input_shape);
+// }
 
 shared_ptr<Node> op::v1::Softmax::clone_with_new_inputs(const OutputVector& new_args) const
 {
@@ -198,10 +198,10 @@ shared_ptr<Node> op::v1::Softmax::clone_with_new_inputs(const OutputVector& new_
     return make_shared<op::v1::Softmax>(new_args.at(0), m_axis);
 }
 
-bool op::v1::Softmax::evaluate(const HostTensorVector& outputs,
-                               const HostTensorVector& inputs) const
-{
-    OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::v1::Softmax::evaluate");
-    outputs[0]->set_unary(inputs[0]);
-    return evaluate_softmax(inputs[0], outputs[0], AxisSet{m_axis});
-}
+// bool op::v1::Softmax::evaluate(const HostTensorVector& outputs,
+//                                const HostTensorVector& inputs) const
+// {
+//     OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::v1::Softmax::evaluate");
+//     outputs[0]->set_unary(inputs[0]);
+//     return evaluate_softmax(inputs[0], outputs[0], AxisSet{m_axis});
+// }

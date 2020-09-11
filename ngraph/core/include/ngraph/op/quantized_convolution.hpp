@@ -92,7 +92,7 @@ namespace ngraph
                 const ngraph::AxisSet& get_input_axes() const { return m_input_axes; }
                 const ngraph::AxisSet& get_filter_axes() const { return m_filter_axes; }
                 const ngraph::AxisSet& get_output_axes() const { return m_output_axes; }
-                void validate_and_infer_types() override;
+                // void validate_and_infer_types() override;
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
 

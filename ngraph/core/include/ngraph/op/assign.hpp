@@ -39,12 +39,12 @@ namespace ngraph
                 /// \param variable_id identificator of the variable to be updated.
                 Assign(const Output<Node>& new_value, const std::string& variable_id);
 
-                void validate_and_infer_types() override;
+                // void validate_and_infer_types() override;
 
                 std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
 
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
 
                 std::string get_variable_id() { return m_variable_id; }
                 std::shared_ptr<ngraph::Variable> get_variable() { return m_variable; }

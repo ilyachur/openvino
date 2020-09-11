@@ -96,9 +96,9 @@ namespace ngraph
                 /// \param[in]  input           Vector with RNN-Cell op inputs in following order:
                 ///                             X, initial_hidden_state, W, R and B.
                 ///
-                void validate_input_rank_dimension(const std::vector<ngraph::PartialShape>& input);
+                // void validate_input_rank_dimension(const std::vector<ngraph::PartialShape>& input);
 
-                virtual bool visit_attributes(AttributeVisitor& visitor);
+                // virtual bool visit_attributes(AttributeVisitor& visitor);
                 std::size_t get_hidden_size() const { return m_hidden_size; }
                 float get_clip() const { return m_clip; }
                 const std::vector<std::string>& get_activations() const { return m_activations; }

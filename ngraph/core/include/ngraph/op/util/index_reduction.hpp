@@ -43,8 +43,8 @@ namespace ngraph
                 void set_reduction_axis(uint64_t value);
                 element::Type get_index_element_type() const;
                 void set_index_element_type(const element::Type& index_element_type);
-                void validate_and_infer_types() override;
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // void validate_and_infer_types() override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
 
             protected:
                 uint64_t m_axis{0};

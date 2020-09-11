@@ -39,7 +39,7 @@ namespace ngraph
                 // Shape inference that will use fused op decomposition to infer
                 // shapes and types of output elements. Ops can choose to override
                 // and provide a more direct implementation.
-                void validate_and_infer_types() override;
+                // void validate_and_infer_types() override;
 
                 // Pre-validation hook that will be invoked before op
                 // decomposition in validate_and_infer_types().
@@ -47,10 +47,10 @@ namespace ngraph
                 // that can be inferred without requiring op decomposition.
                 // Can also be used to set shape specialization hints
                 // (set_input_is_relevant_to_shape())
-                virtual void pre_validate_and_infer_types() {}
+                // virtual void pre_validate_and_infer_types() {}
                 // Post-validation hook that will be invoked after op decomposition
                 // in validate_and_infer_types().
-                virtual void post_validate_and_infer_types() {}
+                // virtual void post_validate_and_infer_types() {}
             protected:
                 FusedOp();
 

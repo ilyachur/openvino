@@ -53,9 +53,9 @@ namespace ngraph
                 std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
 
-                void validate_and_infer_types() override;
-
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // void validate_and_infer_types() override;
+                // 
+                // bool visit_attributes(AttributeVisitor& visitor) override;
                 bool get_linear_before_reset() const { return m_linear_before_reset; }
                 op::RecurrentSequenceDirection get_direction() const { return m_direction; }
             protected:

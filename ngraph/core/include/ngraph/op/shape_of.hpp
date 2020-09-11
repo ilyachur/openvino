@@ -34,11 +34,11 @@ namespace ngraph
                 /// \brief Constructs a shape-of operation.
                 ShapeOf(const Output<Node>& arg, const element::Type output_type = element::i64);
 
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
 
-                void validate_and_infer_types() override;
+                // void validate_and_infer_types() override;
 
                 element::Type get_output_type() const { return m_output_type; }
                 void set_output_type(element::Type output_type) { m_output_type = output_type; }
@@ -53,10 +53,10 @@ namespace ngraph
                 // These metods should be removed if better solution will be designed.
                 void set_is_foldable(bool is_foldable) { m_is_foldable = is_foldable; }
                 bool get_is_foldable() const { return m_is_foldable; }
-                bool evaluate(const HostTensorVector& output_values,
-                              const HostTensorVector& input_values) const override;
-                bool constant_fold(OutputVector& output_values,
-                                   const OutputVector& input_values) override;
+                // bool evaluate(const HostTensorVector& output_values,
+                //               const HostTensorVector& input_values) const override;
+                // bool constant_fold(OutputVector& output_values,
+                //                    const OutputVector& input_values) override;
 
             private:
                 bool m_is_foldable = true;
@@ -75,11 +75,11 @@ namespace ngraph
                 /// \brief Constructs a shape-of operation.
                 ShapeOf(const Output<Node>& arg);
 
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
 
-                void validate_and_infer_types() override;
+                // void validate_and_infer_types() override;
 
                 // FOR CONSTANT FOLDING INTERNAL USAGE ONLY
                 // Constant folding for cases with static rank but dynamic shape create a subgraph
@@ -89,10 +89,10 @@ namespace ngraph
                 // These metods should be removed if better solution will be designed.
                 void set_is_foldable(bool is_foldable) { m_is_foldable = is_foldable; }
                 bool get_is_foldable() const { return m_is_foldable; }
-                bool evaluate(const HostTensorVector& output_values,
-                              const HostTensorVector& input_values) const override;
-                bool constant_fold(OutputVector& output_values,
-                                   const OutputVector& input_values) override;
+                // bool evaluate(const HostTensorVector& output_values,
+                //               const HostTensorVector& input_values) const override;
+                // bool constant_fold(OutputVector& output_values,
+                //                    const OutputVector& input_values) override;
 
             private:
                 bool m_is_foldable = true;

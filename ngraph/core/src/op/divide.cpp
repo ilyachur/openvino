@@ -48,12 +48,12 @@ op::v0::Divide::Divide(const Output<Node>& arg0,
     constructor_validate_and_infer_types();
 }
 
-bool op::v0::Divide::visit_attributes(AttributeVisitor& visitor)
-{
-    BinaryElementwiseArithmetic::visit_attributes(visitor);
-    visitor.on_attribute("m_pythondiv", m_pythondiv);
-    return true;
-}
+// bool op::v0::Divide::visit_attributes(AttributeVisitor& visitor)
+// {
+//     BinaryElementwiseArithmetic::visit_attributes(visitor);
+//     visitor.on_attribute("m_pythondiv", m_pythondiv);
+//     return true;
+// }
 
 shared_ptr<Node> op::v0::Divide::clone_with_new_inputs(const OutputVector& new_args) const
 {
@@ -67,58 +67,58 @@ shared_ptr<Node> ngraph::operator/(const Output<Node>& arg0, const Output<Node>&
     return make_shared<op::v0::Divide>(arg0, arg1);
 }
 
-namespace
-{
-    template <element::Type_t ET>
-    bool evaluate(const HostTensorPtr& arg0,
-                  const HostTensorPtr& arg1,
-                  const HostTensorPtr& out,
-                  const op::AutoBroadcastSpec& broadcast_spec,
-                  bool pythondiv)
-    {
-        runtime::reference::divide(arg0->get_data_ptr<ET>(),
-                                   arg1->get_data_ptr<ET>(),
-                                   out->get_data_ptr<ET>(),
-                                   arg0->get_shape(),
-                                   arg1->get_shape(),
-                                   broadcast_spec,
-                                   pythondiv);
-        return true;
-    }
-
-    bool evaluate_divide(const HostTensorPtr& arg0,
-                         const HostTensorPtr& arg1,
-                         const HostTensorPtr& out,
-                         const op::AutoBroadcastSpec& broadcast_spec,
-                         bool pythondiv)
-    {
-        bool rc = true;
-        out->set_broadcast(broadcast_spec, arg0, arg1);
-        switch (arg0->get_element_type())
-        {
-            TYPE_CASE(i32)(arg0, arg1, out, broadcast_spec, pythondiv);
-            break;
-            TYPE_CASE(i64)(arg0, arg1, out, broadcast_spec, pythondiv);
-            break;
-            TYPE_CASE(u32)(arg0, arg1, out, broadcast_spec, pythondiv);
-            break;
-            TYPE_CASE(u64)(arg0, arg1, out, broadcast_spec, pythondiv);
-            break;
-            TYPE_CASE(f16)(arg0, arg1, out, broadcast_spec, pythondiv);
-            break;
-            TYPE_CASE(f32)(arg0, arg1, out, broadcast_spec, pythondiv);
-            break;
-        default: rc = false; break;
-        }
-        return rc;
-    }
-}
-
-bool op::v0::Divide::evaluate(const HostTensorVector& outputs, const HostTensorVector& inputs) const
-{
-    OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::v0::Divide::evaluate");
-    return evaluate_divide(inputs[0], inputs[1], outputs[0], get_autob(), is_pythondiv());
-}
+// namespace
+// {
+//     template <element::Type_t ET>
+//     bool evaluate(const HostTensorPtr& arg0,
+//                   const HostTensorPtr& arg1,
+//                   const HostTensorPtr& out,
+//                   const op::AutoBroadcastSpec& broadcast_spec,
+//                   bool pythondiv)
+//     {
+//         runtime::reference::divide(arg0->get_data_ptr<ET>(),
+//                                    arg1->get_data_ptr<ET>(),
+//                                    out->get_data_ptr<ET>(),
+//                                    arg0->get_shape(),
+//                                    arg1->get_shape(),
+//                                    broadcast_spec,
+//                                    pythondiv);
+//         return true;
+//     }
+// 
+//     bool evaluate_divide(const HostTensorPtr& arg0,
+//                          const HostTensorPtr& arg1,
+//                          const HostTensorPtr& out,
+//                          const op::AutoBroadcastSpec& broadcast_spec,
+//                          bool pythondiv)
+//     {
+//         bool rc = true;
+//         out->set_broadcast(broadcast_spec, arg0, arg1);
+//         switch (arg0->get_element_type())
+//         {
+//             TYPE_CASE(i32)(arg0, arg1, out, broadcast_spec, pythondiv);
+//             break;
+//             TYPE_CASE(i64)(arg0, arg1, out, broadcast_spec, pythondiv);
+//             break;
+//             TYPE_CASE(u32)(arg0, arg1, out, broadcast_spec, pythondiv);
+//             break;
+//             TYPE_CASE(u64)(arg0, arg1, out, broadcast_spec, pythondiv);
+//             break;
+//             TYPE_CASE(f16)(arg0, arg1, out, broadcast_spec, pythondiv);
+//             break;
+//             TYPE_CASE(f32)(arg0, arg1, out, broadcast_spec, pythondiv);
+//             break;
+//         default: rc = false; break;
+//         }
+//         return rc;
+//     }
+// }
+// 
+// bool op::v0::Divide::evaluate(const HostTensorVector& outputs, const HostTensorVector& inputs) const
+// {
+//     OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::v0::Divide::evaluate");
+//     return evaluate_divide(inputs[0], inputs[1], outputs[0], get_autob(), is_pythondiv());
+// }
 
 // ------------------------------ v1 -------------------------------------------
 
@@ -142,12 +142,12 @@ op::v1::Divide::Divide(const Output<Node>& arg0,
     constructor_validate_and_infer_types();
 }
 
-bool op::v1::Divide::visit_attributes(AttributeVisitor& visitor)
-{
-    BinaryElementwiseArithmetic::visit_attributes(visitor);
-    visitor.on_attribute("m_pythondiv", m_pythondiv);
-    return true;
-}
+// bool op::v1::Divide::visit_attributes(AttributeVisitor& visitor)
+// {
+//     BinaryElementwiseArithmetic::visit_attributes(visitor);
+//     visitor.on_attribute("m_pythondiv", m_pythondiv);
+//     return true;
+// }
 
 shared_ptr<Node> op::v1::Divide::clone_with_new_inputs(const OutputVector& new_args) const
 {
@@ -156,8 +156,8 @@ shared_ptr<Node> op::v1::Divide::clone_with_new_inputs(const OutputVector& new_a
         new_args.at(0), new_args.at(1), this->is_pythondiv(), this->get_autob());
 }
 
-bool op::v1::Divide::evaluate(const HostTensorVector& outputs, const HostTensorVector& inputs) const
-{
-    OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::v1::Divide::evaluate");
-    return evaluate_divide(inputs[0], inputs[1], outputs[0], get_autob(), is_pythondiv());
-}
+// bool op::v1::Divide::evaluate(const HostTensorVector& outputs, const HostTensorVector& inputs) const
+// {
+//     OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::v1::Divide::evaluate");
+//     return evaluate_divide(inputs[0], inputs[1], outputs[0], get_autob(), is_pythondiv());
+// }

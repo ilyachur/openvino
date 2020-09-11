@@ -64,11 +64,11 @@ namespace ngraph
                 DepthToSpace(const Output<Node>& data,
                              const std::string& mode,
                              std::size_t block_size = 1);
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
 
                 std::size_t get_block_size() const { return m_blocksize; }
                 DepthToSpaceMode get_mode() const { return m_mode; }
-                virtual OutputVector decompose_op() const override;
+                // virtual OutputVector decompose_op() const override;
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;

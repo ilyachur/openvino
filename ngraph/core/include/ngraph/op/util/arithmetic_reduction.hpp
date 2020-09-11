@@ -45,7 +45,7 @@ namespace ngraph
                 ArithmeticReduction(const Output<Node>& arg, const Output<Node>& reduction_axes);
 
             public:
-                void validate_and_infer_types() override;
+                // void validate_and_infer_types() override;
 
                 /// \return true if reduction axes are constant else false.
                 bool reduction_axes_constant() const;

@@ -88,45 +88,45 @@ shared_ptr<Node> op::v0::Min::get_default_value() const
     }
 }
 
-namespace
-{
-    template <element::Type_t ET>
-    bool evaluate(const HostTensorPtr& arg, const HostTensorPtr& out, const AxisSet& axes)
-    {
-        out->set_shape(reduce(arg->get_shape(), axes, false));
-        runtime::reference::min(
-            arg->get_data_ptr<ET>(), out->get_data_ptr<ET>(), arg->get_shape(), axes);
-        return true;
-    }
-
-    bool evaluate_min(const HostTensorPtr& arg, const HostTensorPtr& out, const AxisSet& axes)
-    {
-        bool rc = true;
-        switch (arg->get_element_type())
-        {
-            TYPE_CASE(i32)(arg, out, axes);
-            break;
-            TYPE_CASE(i64)(arg, out, axes);
-            break;
-            TYPE_CASE(u32)(arg, out, axes);
-            break;
-            TYPE_CASE(u64)(arg, out, axes);
-            break;
-            TYPE_CASE(f16)(arg, out, axes);
-            break;
-            TYPE_CASE(f32)(arg, out, axes);
-            break;
-        default: rc = false; break;
-        }
-        return rc;
-    }
-}
-
-bool op::v0::Min::evaluate(const HostTensorVector& outputs, const HostTensorVector& inputs) const
-{
-    OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::v0::Min::evaluate");
-    return evaluate_min(inputs[0], outputs[0], get_reduction_axes());
-}
+// namespace
+// {
+//     template <element::Type_t ET>
+//     bool evaluate(const HostTensorPtr& arg, const HostTensorPtr& out, const AxisSet& axes)
+//     {
+//         out->set_shape(reduce(arg->get_shape(), axes, false));
+//         runtime::reference::min(
+//             arg->get_data_ptr<ET>(), out->get_data_ptr<ET>(), arg->get_shape(), axes);
+//         return true;
+//     }
+// 
+//     bool evaluate_min(const HostTensorPtr& arg, const HostTensorPtr& out, const AxisSet& axes)
+//     {
+//         bool rc = true;
+//         switch (arg->get_element_type())
+//         {
+//             TYPE_CASE(i32)(arg, out, axes);
+//             break;
+//             TYPE_CASE(i64)(arg, out, axes);
+//             break;
+//             TYPE_CASE(u32)(arg, out, axes);
+//             break;
+//             TYPE_CASE(u64)(arg, out, axes);
+//             break;
+//             TYPE_CASE(f16)(arg, out, axes);
+//             break;
+//             TYPE_CASE(f32)(arg, out, axes);
+//             break;
+//         default: rc = false; break;
+//         }
+//         return rc;
+//     }
+// }
+// 
+// bool op::v0::Min::evaluate(const HostTensorVector& outputs, const HostTensorVector& inputs) const
+// {
+//     OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::v0::Min::evaluate");
+//     return evaluate_min(inputs[0], outputs[0], get_reduction_axes());
+// }
 
 constexpr NodeTypeInfo op::v1::ReduceMin::type_info;
 
@@ -144,9 +144,9 @@ shared_ptr<Node> op::v1::ReduceMin::clone_with_new_inputs(const OutputVector& ne
     return make_shared<op::v1::ReduceMin>(new_args.at(0), new_args.at(1), get_keep_dims());
 }
 
-bool op::v1::ReduceMin::evaluate(const HostTensorVector& outputs,
-                                 const HostTensorVector& inputs) const
-{
-    OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::v1::ReduceMin::evaluate");
-    return evaluate_min(inputs[0], outputs[0], get_reduction_axes());
-}
+// bool op::v1::ReduceMin::evaluate(const HostTensorVector& outputs,
+//                                  const HostTensorVector& inputs) const
+// {
+//     OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::v1::ReduceMin::evaluate");
+//     return evaluate_min(inputs[0], outputs[0], get_reduction_axes());
+// }

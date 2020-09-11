@@ -90,7 +90,7 @@ namespace ngraph
                              const std::vector<int64_t>& shrink_axis_mask = std::vector<int64_t>{},
                              const std::vector<int64_t>& ellipsis_mask = std::vector<int64_t>{});
 
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
                 const std::vector<int64_t>& get_begin_mask() const { return m_begin_mask; }
                 const std::vector<int64_t>& get_end_mask() const { return m_end_mask; }
                 const std::vector<int64_t>& get_new_axis_mask() const { return m_new_axis_mask; }
@@ -101,10 +101,10 @@ namespace ngraph
                 const std::vector<int64_t>& get_ellipsis_mask() const { return m_ellipsis_mask; }
                 std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
-                void validate_and_infer_types() override;
+                // void validate_and_infer_types() override;
                 size_t get_version() const override { return 1; }
-                bool evaluate(const HostTensorVector& output_values,
-                              const HostTensorVector& input_values) const override;
+                // bool evaluate(const HostTensorVector& output_values,
+                //               const HostTensorVector& input_values) const override;
 
             private:
                 AxisSet convert_mask_to_axis_set(const std::vector<int64_t>& mask) const;

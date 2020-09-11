@@ -42,7 +42,7 @@ namespace ngraph
                     constructor_validate_and_infer_types();
                 }
 
-                void validate_and_infer_types() override;
+                // void validate_and_infer_types() override;
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
                 NGRAPH_SUPPRESS_DEPRECATED_END

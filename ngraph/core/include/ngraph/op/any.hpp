@@ -48,7 +48,7 @@ namespace ngraph
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
-                bool visit_attributes(AttributeVisitor& visitor) override { return true; }
+                // bool visit_attributes(AttributeVisitor& visitor) override { return true; }
                 /// \return The default value for Any.
                 virtual std::shared_ptr<Node> get_default_value() const override;
                 NGRAPH_SUPPRESS_DEPRECATED_END

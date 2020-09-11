@@ -68,9 +68,9 @@ namespace ngraph
                         const Shape& kernel,
                         op::RoundingType rounding_mode);
 
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
                 size_t get_version() const override { return 1; }
-                void validate_and_infer_types() override;
+                // void validate_and_infer_types() override;
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
@@ -99,8 +99,8 @@ namespace ngraph
                 /// \return The default value for MaxPool.
                 virtual std::shared_ptr<Node> get_default_value() const override;
 
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
 
             protected:
                 Shape m_kernel;

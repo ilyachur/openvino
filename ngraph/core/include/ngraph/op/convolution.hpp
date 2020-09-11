@@ -62,8 +62,8 @@ namespace ngraph
                             const Strides& dilations,
                             const PadType& auto_pad = PadType::EXPLICIT);
 
-                void validate_and_infer_types() override;
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // void validate_and_infer_types() override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
@@ -155,8 +155,8 @@ namespace ngraph
                                         const PadType& auto_pad = PadType::EXPLICIT,
                                         const CoordinateDiff& output_padding = {});
 
-                void validate_and_infer_types() override;
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // void validate_and_infer_types() override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
                 virtual bool is_dynamic() const override;
 
                 virtual std::shared_ptr<Node>

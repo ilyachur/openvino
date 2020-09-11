@@ -43,7 +43,7 @@ namespace ngraph
                            const float spatial_scale,
                            const std::string& method);
 
-                void validate_and_infer_types() override;
+                // void validate_and_infer_types() override;
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
@@ -51,7 +51,7 @@ namespace ngraph
                 const Shape& get_output_size() const { return m_output_size; }
                 float get_spatial_scale() const { return m_spatial_scale; }
                 const std::string& get_method() const { return m_method; }
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
 
             private:
                 Shape m_output_size;

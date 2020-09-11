@@ -63,7 +63,7 @@ namespace ngraph
                 /// \param reversed_axes The axes to reverse.
                 Reverse(const Output<Node>& arg, const AxisSet& reversed_axes);
 
-                void validate_and_infer_types() override;
+                // void validate_and_infer_types() override;
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
@@ -74,8 +74,8 @@ namespace ngraph
                 {
                     m_reversed_axes = reversed_axes;
                 }
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
 
             protected:
                 AxisSet m_reversed_axes;
@@ -111,8 +111,8 @@ namespace ngraph
                         const Output<Node>& reversed_axes,
                         const Mode mode);
 
-                bool visit_attributes(AttributeVisitor& visitor) override;
-                void validate_and_infer_types() override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
+                // void validate_and_infer_types() override;
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
@@ -121,8 +121,8 @@ namespace ngraph
                 Mode get_mode() const { return m_mode; }
                 void set_mode(const Mode mode) { m_mode = mode; }
                 virtual size_t get_version() const override { return 1; }
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
 
             protected:
                 Mode mode_from_string(const std::string& mode) const;

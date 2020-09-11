@@ -88,51 +88,51 @@ shared_ptr<Node> op::v0::Max::get_default_value() const
     }
 }
 
-namespace
-{
-    template <element::Type_t ET>
-    bool evaluate(const HostTensorPtr& arg,
-                  const HostTensorPtr& out,
-                  const AxisSet& axes,
-                  bool keep_dims)
-    {
-        out->set_shape(reduce(arg->get_shape(), axes, false));
-        runtime::reference::max(
-            arg->get_data_ptr<ET>(), out->get_data_ptr<ET>(), arg->get_shape(), axes, keep_dims);
-        return true;
-    }
-
-    bool evaluate_max(const HostTensorPtr& arg,
-                      const HostTensorPtr& out,
-                      const AxisSet& axes,
-                      bool keep_dims)
-    {
-        bool rc = true;
-        switch (arg->get_element_type())
-        {
-            TYPE_CASE(i32)(arg, out, axes, keep_dims);
-            break;
-            TYPE_CASE(i64)(arg, out, axes, keep_dims);
-            break;
-            TYPE_CASE(u32)(arg, out, axes, keep_dims);
-            break;
-            TYPE_CASE(u64)(arg, out, axes, keep_dims);
-            break;
-            TYPE_CASE(f16)(arg, out, axes, keep_dims);
-            break;
-            TYPE_CASE(f32)(arg, out, axes, keep_dims);
-            break;
-        default: rc = false; break;
-        }
-        return rc;
-    }
-}
-
-bool op::v0::Max::evaluate(const HostTensorVector& outputs, const HostTensorVector& inputs) const
-{
-    OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::v0::Max::evaluate");
-    return evaluate_max(inputs[0], outputs[0], get_reduction_axes(), false);
-}
+// namespace
+// {
+//     template <element::Type_t ET>
+//     bool evaluate(const HostTensorPtr& arg,
+//                   const HostTensorPtr& out,
+//                   const AxisSet& axes,
+//                   bool keep_dims)
+//     {
+//         out->set_shape(reduce(arg->get_shape(), axes, false));
+//         runtime::reference::max(
+//             arg->get_data_ptr<ET>(), out->get_data_ptr<ET>(), arg->get_shape(), axes, keep_dims);
+//         return true;
+//     }
+// 
+//     bool evaluate_max(const HostTensorPtr& arg,
+//                       const HostTensorPtr& out,
+//                       const AxisSet& axes,
+//                       bool keep_dims)
+//     {
+//         bool rc = true;
+//         switch (arg->get_element_type())
+//         {
+//             TYPE_CASE(i32)(arg, out, axes, keep_dims);
+//             break;
+//             TYPE_CASE(i64)(arg, out, axes, keep_dims);
+//             break;
+//             TYPE_CASE(u32)(arg, out, axes, keep_dims);
+//             break;
+//             TYPE_CASE(u64)(arg, out, axes, keep_dims);
+//             break;
+//             TYPE_CASE(f16)(arg, out, axes, keep_dims);
+//             break;
+//             TYPE_CASE(f32)(arg, out, axes, keep_dims);
+//             break;
+//         default: rc = false; break;
+//         }
+//         return rc;
+//     }
+// }
+// 
+// bool op::v0::Max::evaluate(const HostTensorVector& outputs, const HostTensorVector& inputs) const
+// {
+//     OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::v0::Max::evaluate");
+//     return evaluate_max(inputs[0], outputs[0], get_reduction_axes(), false);
+// }
 
 constexpr NodeTypeInfo op::v1::ReduceMax::type_info;
 
@@ -150,9 +150,9 @@ shared_ptr<Node> op::v1::ReduceMax::clone_with_new_inputs(const OutputVector& ne
     return make_shared<op::v1::ReduceMax>(new_args.at(0), new_args.at(1), get_keep_dims());
 }
 
-bool op::v1::ReduceMax::evaluate(const HostTensorVector& outputs,
-                                 const HostTensorVector& inputs) const
-{
-    OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::v1::ReduceMax::evaluate");
-    return evaluate_max(inputs[0], outputs[0], get_reduction_axes(), get_keep_dims());
-}
+// bool op::v1::ReduceMax::evaluate(const HostTensorVector& outputs,
+//                                  const HostTensorVector& inputs) const
+// {
+//     OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::v1::ReduceMax::evaluate");
+//     return evaluate_max(inputs[0], outputs[0], get_reduction_axes(), get_keep_dims());
+// }

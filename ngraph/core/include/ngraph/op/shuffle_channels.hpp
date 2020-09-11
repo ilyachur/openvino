@@ -50,12 +50,12 @@ namespace ngraph
                                 const int64_t axis = 1,
                                 const int64_t group = 1);
 
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
                 size_t get_zero_based_axis() const;
 
-                virtual void pre_validate_and_infer_types() override;
+                // virtual void pre_validate_and_infer_types() override;
 
-                virtual OutputVector decompose_op() const override;
+                // virtual OutputVector decompose_op() const override;
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;

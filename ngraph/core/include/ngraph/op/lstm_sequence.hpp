@@ -132,9 +132,9 @@ namespace ngraph
                 {
                 }
 
-                virtual void validate_and_infer_types() override;
-                bool visit_attributes(AttributeVisitor& visitor) override;
-                virtual OutputVector decompose_op() const override;
+                // virtual void validate_and_infer_types() override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
+                // virtual OutputVector decompose_op() const override;
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
@@ -232,8 +232,8 @@ namespace ngraph
                     constructor_validate_and_infer_types();
                 }
 
-                void validate_and_infer_types() override;
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // void validate_and_infer_types() override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
 
                 std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;

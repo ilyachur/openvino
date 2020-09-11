@@ -33,16 +33,16 @@ op::v4::Mish::Mish(const Output<Node>& arg)
     constructor_validate_and_infer_types();
 }
 
-bool op::v4::Mish::visit_attributes(AttributeVisitor& visitor)
-{
-    return true;
-}
-
-void op::v4::Mish::validate_and_infer_types()
-{
-    set_output_size(1);
-    set_output_type(0, get_input_element_type(0), get_input_partial_shape(0));
-}
+// bool op::v4::Mish::visit_attributes(AttributeVisitor& visitor)
+// {
+//     return true;
+// }
+// 
+// void op::v4::Mish::validate_and_infer_types()
+// {
+//     set_output_size(1);
+//     set_output_type(0, get_input_element_type(0), get_input_partial_shape(0));
+// }
 
 shared_ptr<Node> op::v4::Mish::clone_with_new_inputs(const OutputVector& new_args) const
 {
@@ -50,35 +50,35 @@ shared_ptr<Node> op::v4::Mish::clone_with_new_inputs(const OutputVector& new_arg
     return make_shared<Mish>(new_args.at(0));
 }
 
-namespace
-{
-    template <element::Type_t ET>
-    inline bool evaluate(const HostTensorPtr& arg0, const HostTensorPtr& out, const size_t count)
-    {
-        using T = typename element_type_traits<ET>::value_type;
-        runtime::reference::mish<T>(arg0->get_data_ptr<ET>(), out->get_data_ptr<ET>(), count);
-        return true;
-    }
-
-    bool evaluate_mish(const HostTensorPtr& arg0, const HostTensorPtr& out, const size_t count)
-    {
-        bool rc = true;
-        out->set_unary(arg0);
-
-        switch (arg0->get_element_type())
-        {
-            TYPE_CASE(f16)(arg0, out, count);
-            break;
-            TYPE_CASE(f32)(arg0, out, count);
-            break;
-        default: rc = false; break;
-        }
-        return rc;
-    }
-}
-
-bool op::v4::Mish::evaluate(const HostTensorVector& outputs, const HostTensorVector& inputs) const
-{
-    OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::v4::Mish::evaluate");
-    return evaluate_mish(inputs[0], outputs[0], shape_size(get_output_shape(0)));
-}
+// namespace
+// {
+//     template <element::Type_t ET>
+//     inline bool evaluate(const HostTensorPtr& arg0, const HostTensorPtr& out, const size_t count)
+//     {
+//         using T = typename element_type_traits<ET>::value_type;
+//         runtime::reference::mish<T>(arg0->get_data_ptr<ET>(), out->get_data_ptr<ET>(), count);
+//         return true;
+//     }
+// 
+//     bool evaluate_mish(const HostTensorPtr& arg0, const HostTensorPtr& out, const size_t count)
+//     {
+//         bool rc = true;
+//         out->set_unary(arg0);
+// 
+//         switch (arg0->get_element_type())
+//         {
+//             TYPE_CASE(f16)(arg0, out, count);
+//             break;
+//             TYPE_CASE(f32)(arg0, out, count);
+//             break;
+//         default: rc = false; break;
+//         }
+//         return rc;
+//     }
+// }
+// 
+// bool op::v4::Mish::evaluate(const HostTensorVector& outputs, const HostTensorVector& inputs) const
+// {
+//     OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::v4::Mish::evaluate");
+//     return evaluate_mish(inputs[0], outputs[0], shape_size(get_output_shape(0)));
+// }

@@ -63,7 +63,7 @@ namespace ngraph
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
-                void validate_and_infer_types() override;
+                // void validate_and_infer_types() override;
 
                 /// \return The inclusive lower-bound coordinates.
                 const Coordinate& get_lower_bounds() const { return m_lower_bounds; }
@@ -71,8 +71,8 @@ namespace ngraph
                 const Coordinate& get_upper_bounds() const { return m_upper_bounds; }
                 /// \return The slicing strides.
                 const Strides& get_strides() const { return m_strides; }
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
 
             protected:
                 Coordinate m_lower_bounds;

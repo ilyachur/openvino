@@ -32,11 +32,11 @@ bool ngraph::pass::revalidate_and_ensure_static(shared_ptr<Node> n)
     return true;
 }
 
-bool ngraph::pass::ConstantFolding::cf_is_disabled(const std::shared_ptr<Node>& node)
-{
-    auto& rt_info = node->get_rt_info();
-    return rt_info.count("DISABLED_CONSTANT_FOLDING") != 0;
-}
+// bool ngraph::pass::ConstantFolding::cf_is_disabled(const std::shared_ptr<Node>& node)
+// {
+//     auto& rt_info = node->get_rt_info();
+//     return rt_info.count("DISABLED_CONSTANT_FOLDING") != 0;
+// }
 
 void ngraph::pass::ConstantFolding::construct_constant_default()
 {

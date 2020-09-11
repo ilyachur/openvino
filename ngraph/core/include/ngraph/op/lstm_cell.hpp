@@ -214,8 +214,8 @@ namespace ngraph
                          float clip = 0.f,
                          bool input_forget = false);
 
-                virtual void validate_and_infer_types() override;
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // virtual void validate_and_infer_types() override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
 
@@ -372,9 +372,9 @@ namespace ngraph
                          const std::vector<float>& activations_beta = {},
                          float clip = 0.f);
 
-                void validate_and_infer_types() override;
-
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // void validate_and_infer_types() override;
+                // 
+                // bool visit_attributes(AttributeVisitor& visitor) override;
                 std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
 

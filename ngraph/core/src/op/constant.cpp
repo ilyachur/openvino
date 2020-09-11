@@ -616,27 +616,27 @@ bool op::Constant::are_all_data_elements_bitwise_identical() const
     return rc;
 }
 
-bool op::v0::Constant::visit_attributes(AttributeVisitor& visitor)
-{
-    visitor.on_attribute("element_type", m_element_type);
-    visitor.on_attribute("shape", m_shape);
-    if (m_data == nullptr)
-    {
-        // Filling in a fresh constant
-        allocate_buffer();
-    }
-    visitor.on_attribute("value", m_data);
-    return true;
-}
-
-bool op::v0::Constant::evaluate(const HostTensorVector& outputs,
-                                const HostTensorVector& inputs) const
-{
-    OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::v0::Constant::evaluate");
-    auto output = outputs[0];
-    output->write(get_data_ptr(), output->get_size_in_bytes());
-    return true;
-}
+// bool op::v0::Constant::visit_attributes(AttributeVisitor& visitor)
+// {
+//     visitor.on_attribute("element_type", m_element_type);
+//     visitor.on_attribute("shape", m_shape);
+//     if (m_data == nullptr)
+//     {
+//         // Filling in a fresh constant
+//         allocate_buffer();
+//     }
+//     visitor.on_attribute("value", m_data);
+//     return true;
+// }
+// 
+// bool op::v0::Constant::evaluate(const HostTensorVector& outputs,
+//                                 const HostTensorVector& inputs) const
+// {
+//     OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::v0::Constant::evaluate");
+//     auto output = outputs[0];
+//     output->write(get_data_ptr(), output->get_size_in_bytes());
+//     return true;
+// }
 
 //
 // We have to open up namespace blocks here to work around a problem with gcc:

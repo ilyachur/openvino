@@ -38,31 +38,31 @@ op::v1::Mod::Mod(const Output<Node>& A,
 {
 }
 
-bool ngraph::op::v1::Mod::visit_attributes(AttributeVisitor& visitor)
-{
-    visitor.on_attribute("auto_broadcast", m_auto_broadcast);
-    return true;
-}
-
-OutputVector op::v1::Mod::decompose_op() const
-{
-    const auto dividend = make_shared<op::Abs>(input_value(0));
-    const auto dividend_sign = make_shared<op::Sign>(input_value(0));
-    const auto dividend_et = dividend->get_element_type();
-    const auto divisor = make_shared<op::Abs>(input_value(1));
-
-    // truncated(a / b)
-    auto division = make_shared<op::Convert>(
-        make_shared<op::v1::Divide>(dividend, divisor, m_auto_broadcast), ngraph::element::i64);
-    division = make_shared<op::Convert>(division, dividend_et);
-    // truncated(a / b) * b
-    const auto multiplication = make_shared<op::v1::Multiply>(division, divisor, m_auto_broadcast);
-    // a mod b = a - truncated(a / b) * b
-    const auto mod = make_shared<op::v1::Subtract>(dividend, multiplication, m_auto_broadcast);
-
-    // apply sign of dividend
-    return {make_shared<op::v1::Multiply>(dividend_sign, mod, m_auto_broadcast)};
-}
+// bool ngraph::op::v1::Mod::visit_attributes(AttributeVisitor& visitor)
+// {
+//     visitor.on_attribute("auto_broadcast", m_auto_broadcast);
+//     return true;
+// }
+// 
+// OutputVector op::v1::Mod::decompose_op() const
+// {
+//     const auto dividend = make_shared<op::Abs>(input_value(0));
+//     const auto dividend_sign = make_shared<op::Sign>(input_value(0));
+//     const auto dividend_et = dividend->get_element_type();
+//     const auto divisor = make_shared<op::Abs>(input_value(1));
+// 
+//     // truncated(a / b)
+//     auto division = make_shared<op::Convert>(
+//         make_shared<op::v1::Divide>(dividend, divisor, m_auto_broadcast), ngraph::element::i64);
+//     division = make_shared<op::Convert>(division, dividend_et);
+//     // truncated(a / b) * b
+//     const auto multiplication = make_shared<op::v1::Multiply>(division, divisor, m_auto_broadcast);
+//     // a mod b = a - truncated(a / b) * b
+//     const auto mod = make_shared<op::v1::Subtract>(dividend, multiplication, m_auto_broadcast);
+// 
+//     // apply sign of dividend
+//     return {make_shared<op::v1::Multiply>(dividend_sign, mod, m_auto_broadcast)};
+// }
 
 shared_ptr<Node> op::v1::Mod::clone_with_new_inputs(const OutputVector& new_args) const
 {

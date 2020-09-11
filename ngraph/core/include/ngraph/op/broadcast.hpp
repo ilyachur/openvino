@@ -64,7 +64,7 @@ namespace ngraph
                           const Output<Node>& target_shape,
                           const BroadcastModeSpec& broadcast_spec = BroadcastType::NUMPY);
 
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
 
                 std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
@@ -76,12 +76,12 @@ namespace ngraph
                     m_mode = broadcast_spec;
                 }
 
-                void validate_and_infer_types() override;
+                // void validate_and_infer_types() override;
 
                 /// \return true and the AxisSet if broadcast axes can be fully determined.
                 std::pair<bool, AxisSet> get_broadcast_axes() const override;
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
             };
         } // namespace v3
 
@@ -125,7 +125,7 @@ namespace ngraph
                           const AutoBroadcastSpec& broadcast_spec =
                               AutoBroadcastSpec(AutoBroadcastType::NUMPY));
 
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
 
                 std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
@@ -137,9 +137,9 @@ namespace ngraph
                     m_broadcast_spec = broadcast_spec;
                 }
 
-                void validate_and_infer_types() override;
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
+                // void validate_and_infer_types() override;
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
 
             protected:
                 AutoBroadcastSpec m_broadcast_spec;
@@ -170,8 +170,8 @@ namespace ngraph
                 Broadcast(const Output<Node>& arg,
                           const Shape& shape,
                           const AxisSet& broadcast_axes);
-                bool visit_attributes(AttributeVisitor& visitor) override;
-                void validate_and_infer_types() override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
+                // void validate_and_infer_types() override;
 
                 std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
@@ -184,8 +184,8 @@ namespace ngraph
                 }
                 const Shape& get_broadcast_shape() const { return m_shape; }
                 void set_broadcast_shape(const Shape& shape) { m_shape = shape; }
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
 
             protected:
                 Broadcast(const OutputVector& args,
@@ -219,7 +219,7 @@ namespace ngraph
                 BroadcastLike(const Output<Node>& arg,
                               const Output<Node>& like_arg,
                               const AxisSet& initial_broadcast_axes);
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
                 std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
 

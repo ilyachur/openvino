@@ -32,47 +32,47 @@ op::v4::HSwish::HSwish(const Output<Node>& arg)
     constructor_validate_and_infer_types();
 }
 
-bool op::v4::HSwish::visit_attributes(AttributeVisitor& visitor)
-{
-    return true;
-}
+// bool op::v4::HSwish::visit_attributes(AttributeVisitor& visitor)
+// {
+//     return true;
+// }
 
 shared_ptr<Node> op::v4::HSwish::clone_with_new_inputs(const OutputVector& new_args) const
 {
     return make_shared<op::v4::HSwish>(new_args.at(0));
 }
 
-namespace
-{
-    template <element::Type_t ET>
-    inline bool evaluate(const HostTensorPtr& arg, const HostTensorPtr& out, const size_t count)
-    {
-        using T = typename element_type_traits<ET>::value_type;
-
-        runtime::reference::hswish<T>(arg->get_data_ptr<ET>(), out->get_data_ptr<ET>(), count);
-        return true;
-    }
-
-    bool evaluate_hswish(const HostTensorPtr& arg, const HostTensorPtr& out, const size_t count)
-    {
-        bool rc = true;
-        out->set_unary(arg);
-
-        switch (arg->get_element_type())
-        {
-            TYPE_CASE(bf16)(arg, out, count);
-            break;
-            TYPE_CASE(f16)(arg, out, count);
-            break;
-            TYPE_CASE(f32)(arg, out, count);
-            break;
-        default: rc = false; break;
-        }
-        return rc;
-    }
-}
-
-bool op::v4::HSwish::evaluate(const HostTensorVector& outputs, const HostTensorVector& inputs) const
-{
-    return evaluate_hswish(inputs[0], outputs[0], shape_size(get_output_shape(0)));
-}
+// namespace
+// {
+//     template <element::Type_t ET>
+//     inline bool evaluate(const HostTensorPtr& arg, const HostTensorPtr& out, const size_t count)
+//     {
+//         using T = typename element_type_traits<ET>::value_type;
+// 
+//         runtime::reference::hswish<T>(arg->get_data_ptr<ET>(), out->get_data_ptr<ET>(), count);
+//         return true;
+//     }
+// 
+//     bool evaluate_hswish(const HostTensorPtr& arg, const HostTensorPtr& out, const size_t count)
+//     {
+//         bool rc = true;
+//         out->set_unary(arg);
+// 
+//         switch (arg->get_element_type())
+//         {
+//             TYPE_CASE(bf16)(arg, out, count);
+//             break;
+//             TYPE_CASE(f16)(arg, out, count);
+//             break;
+//             TYPE_CASE(f32)(arg, out, count);
+//             break;
+//         default: rc = false; break;
+//         }
+//         return rc;
+//     }
+// }
+// 
+// bool op::v4::HSwish::evaluate(const HostTensorVector& outputs, const HostTensorVector& inputs) const
+// {
+//     return evaluate_hswish(inputs[0], outputs[0], shape_size(get_output_shape(0)));
+// }

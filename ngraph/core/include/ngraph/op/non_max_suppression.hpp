@@ -70,8 +70,8 @@ namespace ngraph
                                   const BoxEncodingType box_encoding = BoxEncodingType::CORNER,
                                   const bool sort_result_descending = true);
 
-                bool visit_attributes(AttributeVisitor& visitor) override;
-                void validate_and_infer_types() override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
+                // void validate_and_infer_types() override;
 
                 std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
@@ -149,8 +149,8 @@ namespace ngraph
                                   const bool sort_result_descending = true,
                                   const ngraph::element::Type& output_type = ngraph::element::i64);
 
-                bool visit_attributes(AttributeVisitor& visitor) override;
-                void validate_and_infer_types() override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
+                // void validate_and_infer_types() override;
 
                 std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
@@ -229,7 +229,7 @@ namespace ngraph
                                   const bool sort_result_descending = true,
                                   const ngraph::element::Type& output_type = ngraph::element::i64);
 
-                void validate_and_infer_types() override;
+                // void validate_and_infer_types() override;
 
                 std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;

@@ -55,7 +55,7 @@ namespace ngraph
                 ///
                 Softmax(const Output<Node>& arg, const Output<Node>& axes);
 
-                void validate_and_infer_types() override;
+                // void validate_and_infer_types() override;
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
@@ -64,8 +64,8 @@ namespace ngraph
                 const AxisSet get_axes() const;
                 void set_axes(const AxisSet& axes);
 
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
                 NGRAPH_SUPPRESS_DEPRECATED_END
             };
         }
@@ -91,8 +91,8 @@ namespace ngraph
                 ///
                 Softmax(const Output<Node>& arg, const size_t axis);
 
-                bool visit_attributes(AttributeVisitor& visitor) override;
-                void validate_and_infer_types() override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
+                // void validate_and_infer_types() override;
 
                 size_t get_version() const override { return 1; }
                 virtual std::shared_ptr<Node>
@@ -100,8 +100,8 @@ namespace ngraph
 
                 size_t get_axis() const { return m_axis; }
                 void set_axis(const size_t axis) { m_axis = axis; }
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
 
             private:
                 size_t m_axis;

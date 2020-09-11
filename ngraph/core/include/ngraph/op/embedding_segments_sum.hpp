@@ -73,12 +73,12 @@ namespace ngraph
                                      const Output<Node>& segment_ids,
                                      const Output<Node>& num_segments);
 
-                void validate_and_infer_types() override;
+                // void validate_and_infer_types() override;
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
 
-                virtual bool visit_attributes(AttributeVisitor& visitor) override { return true; }
+                // virtual bool visit_attributes(AttributeVisitor& visitor) override { return true; }
             private:
                 static constexpr int EMB_TABLE = 0;
                 static constexpr int INDICES = 1;

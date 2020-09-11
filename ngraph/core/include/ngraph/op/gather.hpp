@@ -39,14 +39,14 @@ namespace ngraph
                 /// \param axis Axis in params to gather
                 Gather(const Output<Node>& params, const Output<Node>& indices, size_t axis = 0);
 
-                void validate_and_infer_types() override;
+                // void validate_and_infer_types() override;
 
                 size_t get_axis() const { return m_axis; }
                 void set_axis(size_t axis) { m_axis = axis; }
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
 
             protected:
                 size_t m_axis;
@@ -71,16 +71,16 @@ namespace ngraph
                        const Output<Node>& indices,
                        const Output<Node>& axis);
 
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
                 int64_t get_axis() const;
 
-                void validate_and_infer_types() override;
+                // void validate_and_infer_types() override;
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
 
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
             };
         }
 

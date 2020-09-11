@@ -34,16 +34,16 @@ op::util::BinaryElementwiseComparison::BinaryElementwiseComparison(const Output<
 {
 }
 
-void op::util::BinaryElementwiseComparison::validate_and_infer_types()
-{
-    auto args_et_pshape = op::util::validate_and_infer_elementwise_args(this, m_autob);
-    PartialShape& args_pshape = std::get<1>(args_et_pshape);
-
-    set_output_type(0, element::boolean, args_pshape);
-}
-
-bool op::util::BinaryElementwiseComparison::visit_attributes(AttributeVisitor& visitor)
-{
-    visitor.on_attribute("auto_broadcast", m_autob);
-    return true;
-}
+// void op::util::BinaryElementwiseComparison::validate_and_infer_types()
+// {
+//     auto args_et_pshape = op::util::validate_and_infer_elementwise_args(this, m_autob);
+//     PartialShape& args_pshape = std::get<1>(args_et_pshape);
+// 
+//     set_output_type(0, element::boolean, args_pshape);
+// }
+// 
+// bool op::util::BinaryElementwiseComparison::visit_attributes(AttributeVisitor& visitor)
+// {
+//     visitor.on_attribute("auto_broadcast", m_autob);
+//     return true;
+// }

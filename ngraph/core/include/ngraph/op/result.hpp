@@ -38,18 +38,18 @@ namespace ngraph
                 /// \param arg Node that produces the input tensor.
                 Result(const Output<Node>& arg, bool needs_default_layout = false);
 
-                bool visit_attributes(AttributeVisitor& visitor) override;
-                void validate_and_infer_types() override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
+                // void validate_and_infer_types() override;
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
 
                 void set_needs_default_layout(bool val) { m_needs_default_layout = val; }
                 bool needs_default_layout() const { return m_needs_default_layout; }
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
-                bool constant_fold(OutputVector& output_values,
-                                   const OutputVector& inputs_values) override;
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
+                // bool constant_fold(OutputVector& output_values,
+                //                    const OutputVector& inputs_values) override;
 
             private:
                 bool m_needs_default_layout{false};

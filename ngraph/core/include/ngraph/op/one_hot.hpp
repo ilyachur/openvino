@@ -66,7 +66,7 @@ namespace ngraph
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
-                void validate_and_infer_types() override;
+                // void validate_and_infer_types() override;
 
                 /// \return The index of the one-hot axis.
                 size_t get_one_hot_axis() const { return m_one_hot_axis; }
@@ -102,10 +102,10 @@ namespace ngraph
                        const Output<Node>& off_value,
                        int64_t axis);
 
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
-                void validate_and_infer_types() override;
+                // void validate_and_infer_types() override;
 
                 /// \return The index of the one-hot axis.
                 int64_t get_axis() const { return m_axis; }

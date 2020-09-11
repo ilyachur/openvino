@@ -46,8 +46,8 @@ namespace ngraph
                 /// \param axis The axis along which to concatenate the input tensors.
                 Concat(const NodeVector& args, int64_t axis);
 
-                bool visit_attributes(AttributeVisitor& visitor) override;
-                void validate_and_infer_types() override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
+                // void validate_and_infer_types() override;
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
@@ -61,8 +61,8 @@ namespace ngraph
                 /// \return The concatenation axis.
                 int64_t get_axis() const { return m_axis; }
                 void set_axis(int64_t axis) { m_axis = axis; }
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
 
             protected:
                 /// \ brief m_axis stores default value for all iterations

@@ -35,30 +35,30 @@ op::util::BinaryElementwiseLogical::BinaryElementwiseLogical(const Output<Node>&
 {
 }
 
-void op::util::BinaryElementwiseLogical::validate_and_infer_elementwise_logical(
-    const op::AutoBroadcastSpec& autob)
-{
-    auto args_et_pshape = op::util::validate_and_infer_elementwise_args(this, autob);
-    element::Type& args_et = std::get<0>(args_et_pshape);
-    PartialShape& args_pshape = std::get<1>(args_et_pshape);
-
-    NODE_VALIDATION_CHECK(
-        this,
-        args_et.is_dynamic() || args_et == element::boolean,
-        "Operands for logical operators must have boolean element type but have element type ",
-        args_et,
-        ".");
-
-    set_output_type(0, element::boolean, args_pshape);
-}
-
-void op::util::BinaryElementwiseLogical::validate_and_infer_types()
-{
-    validate_and_infer_elementwise_logical(m_autob);
-}
-
-bool op::util::BinaryElementwiseLogical::visit_attributes(AttributeVisitor& visitor)
-{
-    visitor.on_attribute("auto_broadcast", m_autob);
-    return true;
-}
+// void op::util::BinaryElementwiseLogical::validate_and_infer_elementwise_logical(
+//     const op::AutoBroadcastSpec& autob)
+// {
+//     auto args_et_pshape = op::util::validate_and_infer_elementwise_args(this, autob);
+//     element::Type& args_et = std::get<0>(args_et_pshape);
+//     PartialShape& args_pshape = std::get<1>(args_et_pshape);
+// 
+//     NODE_VALIDATION_CHECK(
+//         this,
+//         args_et.is_dynamic() || args_et == element::boolean,
+//         "Operands for logical operators must have boolean element type but have element type ",
+//         args_et,
+//         ".");
+// 
+//     set_output_type(0, element::boolean, args_pshape);
+// }
+// 
+// void op::util::BinaryElementwiseLogical::validate_and_infer_types()
+// {
+//     validate_and_infer_elementwise_logical(m_autob);
+// }
+// 
+// bool op::util::BinaryElementwiseLogical::visit_attributes(AttributeVisitor& visitor)
+// {
+//     visitor.on_attribute("auto_broadcast", m_autob);
+//     return true;
+// }

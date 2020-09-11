@@ -35,19 +35,19 @@ op::Parameter::Parameter(const element::Type& element_type,
     constructor_validate_and_infer_types();
 }
 
-bool op::Parameter::visit_attributes(AttributeVisitor& visitor)
-{
-    visitor.on_attribute("cacheable", m_cacheable);
-    visitor.on_attribute("shape", m_partial_shape);
-    visitor.on_attribute("element_type", m_element_type);
-    return true;
-}
+// bool op::Parameter::visit_attributes(AttributeVisitor& visitor)
+// {
+//     visitor.on_attribute("cacheable", m_cacheable);
+//     visitor.on_attribute("shape", m_partial_shape);
+//     visitor.on_attribute("element_type", m_element_type);
+//     return true;
+// }
 
-void op::Parameter::validate_and_infer_types()
-{
-    Op::validate_and_infer_types();
-    set_output_type(0, m_element_type, m_partial_shape);
-}
+// void op::Parameter::validate_and_infer_types()
+// {
+//     Op::validate_and_infer_types();
+//     set_output_type(0, m_element_type, m_partial_shape);
+// }
 
 shared_ptr<Node> op::Parameter::clone_with_new_inputs(const OutputVector& new_args) const
 {

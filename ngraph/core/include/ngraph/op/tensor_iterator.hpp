@@ -37,7 +37,7 @@ namespace ngraph
             public:
                 static constexpr NodeTypeInfo type_info{"TensorIterator", 0};
                 const NodeTypeInfo& get_type_info() const override { return type_info; }
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
                 // Forward declarations
                 class SliceInputDescription;
                 class MergedInputDescription;
@@ -65,7 +65,7 @@ namespace ngraph
                     virtual std::shared_ptr<InputDescription> copy() const = 0;
 
                     virtual const type_info_t& get_type_info() const = 0;
-                    virtual bool visit_attributes(AttributeVisitor& visitor);
+                    // virtual bool visit_attributes(AttributeVisitor& visitor);
 
                     uint64_t m_input_index{0};
                     uint64_t m_body_parameter_index{0};
@@ -100,7 +100,7 @@ namespace ngraph
                                           int64_t axis);
                     SliceInputDescription() = default;
                     std::shared_ptr<InputDescription> copy() const override;
-                    bool visit_attributes(AttributeVisitor& visitor) override;
+                    // bool visit_attributes(AttributeVisitor& visitor) override;
                     int64_t m_start{0};
                     int64_t m_stride{0};
                     int64_t m_part_size{0};
@@ -133,7 +133,7 @@ namespace ngraph
                                            uint64_t body_value_index);
                     MergedInputDescription() = default;
                     std::shared_ptr<InputDescription> copy() const override;
-                    bool visit_attributes(AttributeVisitor& visitor) override;
+                    // bool visit_attributes(AttributeVisitor& visitor) override;
                     uint64_t m_body_value_index{0};
                 };
 
@@ -145,7 +145,7 @@ namespace ngraph
                     InvariantInputDescription(uint64_t input_index, uint64_t body_parameter_index);
                     InvariantInputDescription() = default;
                     std::shared_ptr<InputDescription> copy() const override;
-                    bool visit_attributes(AttributeVisitor& visitor) override;
+                    // bool visit_attributes(AttributeVisitor& visitor) override;
                 };
 
                 // Forward declarations
@@ -169,7 +169,7 @@ namespace ngraph
                     using type_info_t = DiscreteTypeInfo;
                     virtual ~OutputDescription() {}
                     virtual std::shared_ptr<OutputDescription> copy() const = 0;
-                    virtual bool visit_attributes(AttributeVisitor& visitor);
+                    // virtual bool visit_attributes(AttributeVisitor& visitor);
                     virtual const type_info_t& get_type_info() const = 0;
 
                     uint64_t m_body_value_index{0};
@@ -203,7 +203,7 @@ namespace ngraph
                     ConcatOutputDescription() = default;
 
                     virtual std::shared_ptr<OutputDescription> copy() const override;
-                    bool visit_attributes(AttributeVisitor& visitor) override;
+                    // bool visit_attributes(AttributeVisitor& visitor) override;
                     int64_t m_start{0};
                     int64_t m_stride{0};
                     int64_t m_part_size{0};
@@ -230,7 +230,7 @@ namespace ngraph
                                           int64_t iteration);
                     BodyOutputDescription() = default;
                     std::shared_ptr<OutputDescription> copy() const override;
-                    bool visit_attributes(AttributeVisitor& visitor) override;
+                    // bool visit_attributes(AttributeVisitor& visitor) override;
                     int64_t m_iteration{0};
                 };
 
@@ -338,8 +338,8 @@ namespace ngraph
                 {
                     return m_output_descriptions;
                 }
-                virtual void validate_and_infer_types() override;
-                void revalidate_and_infer_types_for_body_ops();
+                // virtual void validate_and_infer_types() override;
+                // void revalidate_and_infer_types_for_body_ops();
 
                 int64_t get_num_iterations() const { return m_num_iterations; }
                 void set_num_iterations(int64_t num_iterations)
@@ -360,71 +360,71 @@ namespace ngraph
         }
         using v0::TensorIterator;
     }
-    template class NGRAPH_API FactoryRegistry<op::v0::TensorIterator::InputDescription>;
-
-    template <>
-    class NGRAPH_API AttributeAdapter<std::shared_ptr<op::TensorIterator::InputDescription>>
-        : public FactoryAttributeAdapter<op::TensorIterator::InputDescription>
-    {
-    public:
-        using FactoryAttributeAdapter::FactoryAttributeAdapter;
-        static constexpr DiscreteTypeInfo type_info{
-            "AttributeAdapter<std::shared_ptr<op::TensorIterator::InputDescription>>"
-            ">>",
-            0};
-        const DiscreteTypeInfo& get_type_info() const override { return type_info; }
-    };
-
-    template <>
-    class NGRAPH_API
-        AttributeAdapter<std::vector<std::shared_ptr<op::TensorIterator::InputDescription>>>
-        : public VisitorAdapter
-    {
-    public:
-        AttributeAdapter(std::vector<std::shared_ptr<op::TensorIterator::InputDescription>>& ref);
-
-        bool visit_attributes(AttributeVisitor& visitor) override;
-        static constexpr DiscreteTypeInfo type_info{
-            "AttributeAdapter<std::vector<std::shared_ptr<op::TensorIterator::InputDescription>>"
-            ">>",
-            0};
-        const DiscreteTypeInfo& get_type_info() const override { return type_info; }
-    protected:
-        std::vector<std::shared_ptr<op::TensorIterator::InputDescription>>& m_ref;
-    };
-
-    template class NGRAPH_API FactoryRegistry<op::v0::TensorIterator::OutputDescription>;
-
-    template <>
-    class NGRAPH_API AttributeAdapter<std::shared_ptr<op::TensorIterator::OutputDescription>>
-        : public FactoryAttributeAdapter<op::TensorIterator::OutputDescription>
-    {
-    public:
-        using FactoryAttributeAdapter::FactoryAttributeAdapter;
-        static constexpr DiscreteTypeInfo type_info{
-            "AttributeAdapter<std::shared_ptr<op::TensorIterator::OutputDescription>>"
-            ">>",
-            0};
-        const DiscreteTypeInfo& get_type_info() const override { return type_info; }
-    };
-
-    template <>
-    class NGRAPH_API
-        AttributeAdapter<std::vector<std::shared_ptr<op::TensorIterator::OutputDescription>>>
-        : public VisitorAdapter
-    {
-    public:
-        AttributeAdapter(std::vector<std::shared_ptr<op::TensorIterator::OutputDescription>>& ref);
-
-        bool visit_attributes(AttributeVisitor& visitor) override;
-        static constexpr DiscreteTypeInfo type_info{
-            "AttributeAdapter<std::vector<std::shared_ptr<op::TensorIterator::OutputDescription>>"
-            ">>",
-            0};
-        const DiscreteTypeInfo& get_type_info() const override { return type_info; }
-    protected:
-        std::vector<std::shared_ptr<op::TensorIterator::OutputDescription>>& m_ref;
-    };
+    // template class NGRAPH_API FactoryRegistry<op::v0::TensorIterator::InputDescription>;
+    // 
+    // template <>
+    // class NGRAPH_API AttributeAdapter<std::shared_ptr<op::TensorIterator::InputDescription>>
+    //     : public FactoryAttributeAdapter<op::TensorIterator::InputDescription>
+    // {
+    // public:
+    //     using FactoryAttributeAdapter::FactoryAttributeAdapter;
+    //     static constexpr DiscreteTypeInfo type_info{
+    //         "AttributeAdapter<std::shared_ptr<op::TensorIterator::InputDescription>>"
+    //         ">>",
+    //         0};
+    //     const DiscreteTypeInfo& get_type_info() const override { return type_info; }
+    // };
+    // 
+    // template <>
+    // class NGRAPH_API
+    //     AttributeAdapter<std::vector<std::shared_ptr<op::TensorIterator::InputDescription>>>
+    //     : public VisitorAdapter
+    // {
+    // public:
+    //     AttributeAdapter(std::vector<std::shared_ptr<op::TensorIterator::InputDescription>>& ref);
+    // 
+    //     bool visit_attributes(AttributeVisitor& visitor) override;
+    //     static constexpr DiscreteTypeInfo type_info{
+    //         "AttributeAdapter<std::vector<std::shared_ptr<op::TensorIterator::InputDescription>>"
+    //         ">>",
+    //         0};
+    //     const DiscreteTypeInfo& get_type_info() const override { return type_info; }
+    // protected:
+    //     std::vector<std::shared_ptr<op::TensorIterator::InputDescription>>& m_ref;
+    // };
+    // 
+    // template class NGRAPH_API FactoryRegistry<op::v0::TensorIterator::OutputDescription>;
+    // 
+    // template <>
+    // class NGRAPH_API AttributeAdapter<std::shared_ptr<op::TensorIterator::OutputDescription>>
+    //     : public FactoryAttributeAdapter<op::TensorIterator::OutputDescription>
+    // {
+    // public:
+    //     using FactoryAttributeAdapter::FactoryAttributeAdapter;
+    //     static constexpr DiscreteTypeInfo type_info{
+    //         "AttributeAdapter<std::shared_ptr<op::TensorIterator::OutputDescription>>"
+    //         ">>",
+    //         0};
+    //     const DiscreteTypeInfo& get_type_info() const override { return type_info; }
+    // };
+    // 
+    // template <>
+    // class NGRAPH_API
+    //     AttributeAdapter<std::vector<std::shared_ptr<op::TensorIterator::OutputDescription>>>
+    //     : public VisitorAdapter
+    // {
+    // public:
+    //     AttributeAdapter(std::vector<std::shared_ptr<op::TensorIterator::OutputDescription>>& ref);
+    // 
+    //     bool visit_attributes(AttributeVisitor& visitor) override;
+    //     static constexpr DiscreteTypeInfo type_info{
+    //         "AttributeAdapter<std::vector<std::shared_ptr<op::TensorIterator::OutputDescription>>"
+    //         ">>",
+    //         0};
+    //     const DiscreteTypeInfo& get_type_info() const override { return type_info; }
+    // protected:
+    //     std::vector<std::shared_ptr<op::TensorIterator::OutputDescription>>& m_ref;
+    // };
 }
 
 NGRAPH_SUPPRESS_DEPRECATED_END

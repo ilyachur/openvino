@@ -59,13 +59,13 @@ namespace ngraph
                                   const Output<Node>& image_shape,
                                   const PriorBoxClusteredAttrs& attrs);
 
-                void validate_and_infer_types() override;
+                // void validate_and_infer_types() override;
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
                 const PriorBoxClusteredAttrs& get_attrs() const { return m_attrs; }
-                virtual bool visit_attributes(AttributeVisitor& visitor) override;
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
+                // virtual bool visit_attributes(AttributeVisitor& visitor) override;
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
 
             private:
                 PriorBoxClusteredAttrs m_attrs;

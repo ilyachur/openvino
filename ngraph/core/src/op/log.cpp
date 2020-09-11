@@ -33,10 +33,10 @@ op::Log::Log(const Output<Node>& arg)
     constructor_validate_and_infer_types();
 }
 
-bool ngraph::op::v0::Log::visit_attributes(AttributeVisitor& visitor)
-{
-    return true;
-}
+// bool ngraph::op::v0::Log::visit_attributes(AttributeVisitor& visitor)
+// {
+//     return true;
+// }
 
 shared_ptr<Node> op::Log::clone_with_new_inputs(const OutputVector& new_args) const
 {
@@ -44,45 +44,45 @@ shared_ptr<Node> op::Log::clone_with_new_inputs(const OutputVector& new_args) co
     return make_shared<Log>(new_args.at(0));
 }
 
-namespace
-{
-    template <element::Type_t ET>
-    inline bool evaluate(const HostTensorPtr& arg0, const HostTensorPtr& out, const size_t count)
-    {
-        using T = typename element_type_traits<ET>::value_type;
-        runtime::reference::log<T>(arg0->get_data_ptr<ET>(), out->get_data_ptr<ET>(), count);
-        return true;
-    }
-
-    bool evaluate_log(const HostTensorPtr& arg0, const HostTensorPtr& out, const size_t count)
-    {
-        bool rc = true;
-        out->set_unary(arg0);
-
-        switch (arg0->get_element_type())
-        {
-            TYPE_CASE(boolean)(arg0, out, count);
-            break;
-            TYPE_CASE(i32)(arg0, out, count);
-            break;
-            TYPE_CASE(i64)(arg0, out, count);
-            break;
-            TYPE_CASE(u32)(arg0, out, count);
-            break;
-            TYPE_CASE(u64)(arg0, out, count);
-            break;
-            TYPE_CASE(f16)(arg0, out, count);
-            break;
-            TYPE_CASE(f32)(arg0, out, count);
-            break;
-        default: rc = false; break;
-        }
-        return rc;
-    }
-}
-
-bool op::Log::evaluate(const HostTensorVector& outputs, const HostTensorVector& inputs) const
-{
-    OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::Log::evaluate");
-    return evaluate_log(inputs[0], outputs[0], shape_size(get_output_shape(0)));
-}
+// namespace
+// {
+//     template <element::Type_t ET>
+//     inline bool evaluate(const HostTensorPtr& arg0, const HostTensorPtr& out, const size_t count)
+//     {
+//         using T = typename element_type_traits<ET>::value_type;
+//         runtime::reference::log<T>(arg0->get_data_ptr<ET>(), out->get_data_ptr<ET>(), count);
+//         return true;
+//     }
+// 
+//     bool evaluate_log(const HostTensorPtr& arg0, const HostTensorPtr& out, const size_t count)
+//     {
+//         bool rc = true;
+//         out->set_unary(arg0);
+// 
+//         switch (arg0->get_element_type())
+//         {
+//             TYPE_CASE(boolean)(arg0, out, count);
+//             break;
+//             TYPE_CASE(i32)(arg0, out, count);
+//             break;
+//             TYPE_CASE(i64)(arg0, out, count);
+//             break;
+//             TYPE_CASE(u32)(arg0, out, count);
+//             break;
+//             TYPE_CASE(u64)(arg0, out, count);
+//             break;
+//             TYPE_CASE(f16)(arg0, out, count);
+//             break;
+//             TYPE_CASE(f32)(arg0, out, count);
+//             break;
+//         default: rc = false; break;
+//         }
+//         return rc;
+//     }
+// }
+// 
+// bool op::Log::evaluate(const HostTensorVector& outputs, const HostTensorVector& inputs) const
+// {
+//     OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::Log::evaluate");
+//     return evaluate_log(inputs[0], outputs[0], shape_size(get_output_shape(0)));
+// }

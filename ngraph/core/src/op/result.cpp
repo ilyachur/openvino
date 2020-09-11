@@ -35,18 +35,18 @@ op::Result::Result(const Output<Node>& arg, bool needs_default_layout)
     constructor_validate_and_infer_types();
 }
 
-bool ngraph::op::v0::Result::visit_attributes(AttributeVisitor& visitor)
-{
-    return true;
-}
-
-void op::Result::validate_and_infer_types()
-{
-    NODE_VALIDATION_CHECK(
-        this, get_input_size() == 1, "Argument has ", get_input_size(), " outputs (1 expected).");
-
-    set_output_type(0, get_input_element_type(0), get_input_partial_shape(0));
-}
+// bool ngraph::op::v0::Result::visit_attributes(AttributeVisitor& visitor)
+// {
+//     return true;
+// }
+// 
+// void op::Result::validate_and_infer_types()
+// {
+//     NODE_VALIDATION_CHECK(
+//         this, get_input_size() == 1, "Argument has ", get_input_size(), " outputs (1 expected).");
+// 
+//     set_output_type(0, get_input_element_type(0), get_input_partial_shape(0));
+// }
 
 shared_ptr<Node> op::Result::clone_with_new_inputs(const OutputVector& new_args) const
 {
@@ -56,20 +56,20 @@ shared_ptr<Node> op::Result::clone_with_new_inputs(const OutputVector& new_args)
     return std::move(res);
 }
 
-bool op::Result::evaluate(const HostTensorVector& outputs, const HostTensorVector& inputs) const
-{
-    OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::Result::evaluate");
-    outputs[0]->set_unary(inputs[0]);
-    void* output = outputs[0]->get_data_ptr();
-    void* input = inputs[0]->get_data_ptr();
-    memcpy(output, input, outputs[0]->get_size_in_bytes());
-    return true;
-}
-
-bool op::Result::constant_fold(OutputVector& output_values, const OutputVector& inputs_values)
-{
-    return false;
-}
+// bool op::Result::evaluate(const HostTensorVector& outputs, const HostTensorVector& inputs) const
+// {
+//     OV_ITT_SCOPED_TASK(itt::domains::nGraphOp, "op::Result::evaluate");
+//     outputs[0]->set_unary(inputs[0]);
+//     void* output = outputs[0]->get_data_ptr();
+//     void* input = inputs[0]->get_data_ptr();
+//     memcpy(output, input, outputs[0]->get_size_in_bytes());
+//     return true;
+// }
+// 
+// bool op::Result::constant_fold(OutputVector& output_values, const OutputVector& inputs_values)
+// {
+//     return false;
+// }
 
 constexpr DiscreteTypeInfo AttributeAdapter<ResultVector>::type_info;
 

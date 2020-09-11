@@ -67,11 +67,11 @@ namespace ngraph
                                             const AutoBroadcastSpec& autob = AutoBroadcastSpec());
 
             public:
-                void validate_and_infer_types() override;
+                // void validate_and_infer_types() override;
 
                 const AutoBroadcastSpec& get_autob() const override { return m_autob; }
                 void set_autob(const AutoBroadcastSpec& autob) { m_autob = autob; }
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
 
             private:
                 AutoBroadcastSpec m_autob;

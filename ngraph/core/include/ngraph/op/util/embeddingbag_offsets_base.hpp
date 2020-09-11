@@ -67,8 +67,8 @@ namespace ngraph
                                         const Output<Node>& indices,
                                         const Output<Node>& offsets);
 
-                void validate_and_infer_types() override;
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // void validate_and_infer_types() override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
 
             private:
                 static constexpr int EMB_TABLE = 0;

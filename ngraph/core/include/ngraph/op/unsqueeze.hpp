@@ -39,12 +39,12 @@ namespace ngraph
                 Unsqueeze() = default;
                 Unsqueeze(const Output<Node>& data, const Output<Node>& axes);
 
-                virtual void pre_validate_and_infer_types() override;
-                virtual OutputVector decompose_op() const override;
+                // virtual void pre_validate_and_infer_types() override;
+                // virtual OutputVector decompose_op() const override;
 
-                bool visit_attributes(AttributeVisitor& visitor) override;
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;

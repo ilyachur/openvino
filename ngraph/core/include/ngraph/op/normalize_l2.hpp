@@ -54,11 +54,11 @@ namespace ngraph
                             float eps,
                             EpsMode eps_mode);
 
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
                 float get_eps() const { return m_eps; }
                 EpsMode get_eps_mode() const { return m_eps_mode; }
-                virtual OutputVector decompose_op() const override;
-                virtual void pre_validate_and_infer_types() override;
+                // virtual OutputVector decompose_op() const override;
+                // virtual void pre_validate_and_infer_types() override;
                 AxisSet get_reduction_axes() const;
 
                 virtual std::shared_ptr<Node>

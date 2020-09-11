@@ -238,16 +238,16 @@ namespace ngraph
 
                 virtual ~Constant() override;
 
-                void validate_and_infer_types() override
-                {
-                    infer_element_type();
-                    set_output_type(0, m_element_type, m_shape);
-                }
+                // void validate_and_infer_types() override
+                // {
+                //     infer_element_type();
+                //     set_output_type(0, m_element_type, m_shape);
+                // }
 
-                bool visit_attributes(AttributeVisitor& visitor) override;
-
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
+                // 
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
 
                 // Don't constant fold a constant; it would make a copy
                 bool constant_fold(OutputVector& outputs, const OutputVector& inputs) override

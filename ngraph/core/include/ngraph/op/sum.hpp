@@ -100,8 +100,8 @@ namespace ngraph
                 /// \return The default value for Sum.
                 virtual std::shared_ptr<Node> get_default_value() const override;
 
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
                 NGRAPH_SUPPRESS_DEPRECATED_END
             };
         }

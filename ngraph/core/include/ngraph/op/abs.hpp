@@ -35,7 +35,7 @@ namespace ngraph
                 const NodeTypeInfo& get_type_info() const override { return type_info; }
                 /// \brief Constructs an absolute value operation.
                 Abs() = default;
-                bool visit_attributes(AttributeVisitor& visitor) override { return true; }
+                // bool visit_attributes(AttributeVisitor& visitor) override { return true; }
                 /// \brief Constructs an absolute value operation.
                 ///
                 /// \param arg Output that produces the input tensor.<br>
@@ -48,8 +48,8 @@ namespace ngraph
                 std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
 
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
             };
         }
         using v0::Abs;

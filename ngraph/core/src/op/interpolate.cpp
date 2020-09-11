@@ -36,45 +36,45 @@ op::v0::Interpolate::Interpolate(const Output<Node>& image,
     constructor_validate_and_infer_types();
 }
 
-bool op::v0::Interpolate::visit_attributes(AttributeVisitor& visitor)
-{
-    visitor.on_attribute("align_corners", m_attrs.align_corners);
-    visitor.on_attribute("antialias", m_attrs.antialias);
-    visitor.on_attribute("axes", m_attrs.axes);
-    visitor.on_attribute("mode", m_attrs.mode);
-    visitor.on_attribute("pads_begin", m_attrs.pads_begin);
-    visitor.on_attribute("pads_end", m_attrs.pads_end);
-    return true;
-}
-
-void op::v0::Interpolate::validate_and_infer_types()
-{
-    NODE_VALIDATION_CHECK(this,
-                          get_input_element_type(1).is_integral_number(),
-                          "output shape must be an integral number.");
-    set_input_is_relevant_to_shape(1);
-
-    PartialShape output_shape = PartialShape(get_input_partial_shape(0));
-    if (output_shape.rank().is_static())
-    {
-        for (auto axis : m_attrs.axes)
-        {
-            NGRAPH_CHECK(axis < output_shape.rank().get_length());
-            output_shape[axis] = Dimension::dynamic();
-        }
-    }
-
-    if (auto const_shape = as_type_ptr<op::v0::Constant>(input_value(1).get_node_shared_ptr()))
-    {
-        auto out_shape = const_shape->cast_vector<int64_t>();
-        size_t i = 0;
-        for (auto axis : m_attrs.axes)
-        {
-            output_shape[axis] = Dimension(out_shape[i++]);
-        }
-    }
-    set_output_type(0, get_input_element_type(0), output_shape);
-}
+// bool op::v0::Interpolate::visit_attributes(AttributeVisitor& visitor)
+// {
+//     visitor.on_attribute("align_corners", m_attrs.align_corners);
+//     visitor.on_attribute("antialias", m_attrs.antialias);
+//     visitor.on_attribute("axes", m_attrs.axes);
+//     visitor.on_attribute("mode", m_attrs.mode);
+//     visitor.on_attribute("pads_begin", m_attrs.pads_begin);
+//     visitor.on_attribute("pads_end", m_attrs.pads_end);
+//     return true;
+// }
+// 
+// void op::v0::Interpolate::validate_and_infer_types()
+// {
+//     NODE_VALIDATION_CHECK(this,
+//                           get_input_element_type(1).is_integral_number(),
+//                           "output shape must be an integral number.");
+//     set_input_is_relevant_to_shape(1);
+// 
+//     PartialShape output_shape = PartialShape(get_input_partial_shape(0));
+//     if (output_shape.rank().is_static())
+//     {
+//         for (auto axis : m_attrs.axes)
+//         {
+//             NGRAPH_CHECK(axis < output_shape.rank().get_length());
+//             output_shape[axis] = Dimension::dynamic();
+//         }
+//     }
+// 
+//     if (auto const_shape = as_type_ptr<op::v0::Constant>(input_value(1).get_node_shared_ptr()))
+//     {
+//         auto out_shape = const_shape->cast_vector<int64_t>();
+//         size_t i = 0;
+//         for (auto axis : m_attrs.axes)
+//         {
+//             output_shape[axis] = Dimension(out_shape[i++]);
+//         }
+//     }
+//     set_output_type(0, get_input_element_type(0), output_shape);
+// }
 
 shared_ptr<Node> op::v0::Interpolate::clone_with_new_inputs(const OutputVector& new_args) const
 {
@@ -130,18 +130,18 @@ op::v4::Interpolate::Interpolate(const Output<Node>& image,
     constructor_validate_and_infer_types();
 }
 
-bool op::v4::Interpolate::visit_attributes(AttributeVisitor& visitor)
-{
-    visitor.on_attribute("mode", m_attrs.mode);
-    visitor.on_attribute("shape_calculation_mode", m_attrs.shape_calculation_mode);
-    visitor.on_attribute("coordinate_transformation_mode", m_attrs.coordinate_transformation_mode);
-    visitor.on_attribute("nearest_mode", m_attrs.nearest_mode);
-    visitor.on_attribute("antialias", m_attrs.antialias);
-    visitor.on_attribute("pads_begin", m_attrs.pads_begin);
-    visitor.on_attribute("pads_end", m_attrs.pads_end);
-    visitor.on_attribute("cube_coeff", m_attrs.cube_coeff);
-    return true;
-}
+// bool op::v4::Interpolate::visit_attributes(AttributeVisitor& visitor)
+// {
+//     visitor.on_attribute("mode", m_attrs.mode);
+//     visitor.on_attribute("shape_calculation_mode", m_attrs.shape_calculation_mode);
+//     visitor.on_attribute("coordinate_transformation_mode", m_attrs.coordinate_transformation_mode);
+//     visitor.on_attribute("nearest_mode", m_attrs.nearest_mode);
+//     visitor.on_attribute("antialias", m_attrs.antialias);
+//     visitor.on_attribute("pads_begin", m_attrs.pads_begin);
+//     visitor.on_attribute("pads_end", m_attrs.pads_end);
+//     visitor.on_attribute("cube_coeff", m_attrs.cube_coeff);
+//     return true;
+// }
 
 std::vector<int64_t> op::v4::Interpolate::get_axes() const
 {
@@ -217,59 +217,59 @@ PartialShape op::v4::Interpolate::get_padded_input_shape(const PartialShape& inp
     return padded_input_shape;
 }
 
-void op::v4::Interpolate::validate_and_infer_types()
-{
-    element::Type input_et = get_input_element_type(0);
-    NODE_VALIDATION_CHECK(this,
-                          input_et == element::f32 || input_et == element::f16 ||
-                              input_et == element::i8,
-                          "Input element type must be f32, f16, or i8");
-
-    PartialShape input_shape = PartialShape(get_input_partial_shape(0));
-
-    if (!input_shape.rank().is_static())
-    {
-        set_output_type(0, get_input_element_type(0), input_shape);
-        return;
-    }
-
-    auto axes = get_axes();
-    correct_pads();
-
-    const auto input_rank = input_shape.rank().get_length();
-
-    PartialShape padded_input_shape = get_padded_input_shape(input_shape);
-    PartialShape output_shape = padded_input_shape;
-
-    if (output_shape.rank().is_static())
-    {
-        for (auto axis : axes)
-        {
-            NGRAPH_CHECK(axis < input_rank);
-            output_shape[axis] = Dimension::dynamic();
-        }
-    }
-
-    set_output_type(0, get_input_element_type(0), output_shape);
-    if (m_attrs.shape_calculation_mode == ShapeCalcMode::scales)
-    {
-        if (auto const_scales = as_type_ptr<op::v0::Constant>(input_value(2).get_node_shared_ptr()))
-        {
-            auto scales = const_scales->cast_vector<float>();
-            infer_using_scales(output_shape, axes, scales, padded_input_shape);
-        }
-    }
-    else
-    {
-        if (auto const_shape = as_type_ptr<op::v0::Constant>(input_value(1).get_node_shared_ptr()))
-        {
-            auto sizes = const_shape->cast_vector<int64_t>();
-            infer_using_shapes(output_shape, axes, sizes);
-        }
-    }
-
-    set_output_type(0, get_input_element_type(0), output_shape);
-}
+// void op::v4::Interpolate::validate_and_infer_types()
+// {
+//     element::Type input_et = get_input_element_type(0);
+//     NODE_VALIDATION_CHECK(this,
+//                           input_et == element::f32 || input_et == element::f16 ||
+//                               input_et == element::i8,
+//                           "Input element type must be f32, f16, or i8");
+// 
+//     PartialShape input_shape = PartialShape(get_input_partial_shape(0));
+// 
+//     if (!input_shape.rank().is_static())
+//     {
+//         set_output_type(0, get_input_element_type(0), input_shape);
+//         return;
+//     }
+// 
+//     auto axes = get_axes();
+//     correct_pads();
+// 
+//     const auto input_rank = input_shape.rank().get_length();
+// 
+//     PartialShape padded_input_shape = get_padded_input_shape(input_shape);
+//     PartialShape output_shape = padded_input_shape;
+// 
+//     if (output_shape.rank().is_static())
+//     {
+//         for (auto axis : axes)
+//         {
+//             NGRAPH_CHECK(axis < input_rank);
+//             output_shape[axis] = Dimension::dynamic();
+//         }
+//     }
+// 
+//     set_output_type(0, get_input_element_type(0), output_shape);
+//     if (m_attrs.shape_calculation_mode == ShapeCalcMode::scales)
+//     {
+//         if (auto const_scales = as_type_ptr<op::v0::Constant>(input_value(2).get_node_shared_ptr()))
+//         {
+//             auto scales = const_scales->cast_vector<float>();
+//             infer_using_scales(output_shape, axes, scales, padded_input_shape);
+//         }
+//     }
+//     else
+//     {
+//         if (auto const_shape = as_type_ptr<op::v0::Constant>(input_value(1).get_node_shared_ptr()))
+//         {
+//             auto sizes = const_shape->cast_vector<int64_t>();
+//             infer_using_shapes(output_shape, axes, sizes);
+//         }
+//     }
+// 
+//     set_output_type(0, get_input_element_type(0), output_shape);
+// }
 
 shared_ptr<Node> op::v4::Interpolate::clone_with_new_inputs(const OutputVector& new_args) const
 {
@@ -417,81 +417,81 @@ static void pad_input_data(const uint8_t* data_ptr,
     }
 }
 
-bool op::v4::Interpolate::evaluate(const HostTensorVector& outputs,
-                                   const HostTensorVector& inputs) const
-{
-    element::Type input_et = get_input_element_type(0);
-    size_t type_size = input_et.size();
-
-    Shape input_shape{inputs[data_port]->get_shape()};
-    Shape padded_input_shape = get_padded_input_shape(input_shape).to_shape();
-
-    auto axes = get_axes_vector(inputs);
-    size_t num_of_axes = axes.size();
-
-    auto scales = get_scales_vector(inputs, padded_input_shape, m_attrs, axes);
-
-    PartialShape output_shape{padded_input_shape};
-
-    if (m_attrs.shape_calculation_mode == ShapeCalcMode::scales)
-    {
-        infer_using_scales(output_shape, axes, scales, padded_input_shape);
-    }
-    else
-    {
-        auto sizes = get_target_shape_vector(inputs, num_of_axes);
-        infer_using_shapes(output_shape, axes, sizes);
-    }
-
-    Shape out_shape = output_shape.to_shape();
-
-    outputs[0]->set_element_type(inputs[0]->get_element_type());
-    outputs[0]->set_shape(out_shape);
-
-    size_t bytes_in_padded_input = shape_size(padded_input_shape) * type_size;
-
-    std::vector<uint8_t> padded_input_data(bytes_in_padded_input, 0);
-
-    const uint8_t* data_ptr = inputs[0]->get_data_ptr<uint8_t>();
-    uint8_t* padded_data_ptr = padded_input_data.data();
-
-    pad_input_data(
-        data_ptr, padded_data_ptr, type_size, input_shape, padded_input_shape, m_attrs.pads_begin);
-
-    switch (input_et)
-    {
-    case element::Type_t::f32:
-        runtime::reference::interpolate<float>(reinterpret_cast<float*>(padded_data_ptr),
-                                               padded_input_shape,
-                                               scales,
-                                               axes,
-                                               outputs[0]->get_data_ptr<float>(),
-                                               out_shape,
-                                               m_attrs);
-        break;
-    case element::Type_t::f16:
-        runtime::reference::interpolate<float16>(reinterpret_cast<float16*>(padded_data_ptr),
-                                                 padded_input_shape,
-                                                 scales,
-                                                 axes,
-                                                 outputs[0]->get_data_ptr<float16>(),
-                                                 out_shape,
-                                                 m_attrs);
-        break;
-    case element::Type_t::i8:
-        runtime::reference::interpolate<int8_t>(reinterpret_cast<int8_t*>(padded_data_ptr),
-                                                padded_input_shape,
-                                                scales,
-                                                axes,
-                                                outputs[0]->get_data_ptr<int8_t>(),
-                                                out_shape,
-                                                m_attrs);
-        break;
-    default:;
-    }
-
-    return true;
-}
+// bool op::v4::Interpolate::evaluate(const HostTensorVector& outputs,
+//                                    const HostTensorVector& inputs) const
+// {
+//     element::Type input_et = get_input_element_type(0);
+//     size_t type_size = input_et.size();
+// 
+//     Shape input_shape{inputs[data_port]->get_shape()};
+//     Shape padded_input_shape = get_padded_input_shape(input_shape).to_shape();
+// 
+//     auto axes = get_axes_vector(inputs);
+//     size_t num_of_axes = axes.size();
+// 
+//     auto scales = get_scales_vector(inputs, padded_input_shape, m_attrs, axes);
+// 
+//     PartialShape output_shape{padded_input_shape};
+// 
+//     if (m_attrs.shape_calculation_mode == ShapeCalcMode::scales)
+//     {
+//         infer_using_scales(output_shape, axes, scales, padded_input_shape);
+//     }
+//     else
+//     {
+//         auto sizes = get_target_shape_vector(inputs, num_of_axes);
+//         infer_using_shapes(output_shape, axes, sizes);
+//     }
+// 
+//     Shape out_shape = output_shape.to_shape();
+// 
+//     outputs[0]->set_element_type(inputs[0]->get_element_type());
+//     outputs[0]->set_shape(out_shape);
+// 
+//     size_t bytes_in_padded_input = shape_size(padded_input_shape) * type_size;
+// 
+//     std::vector<uint8_t> padded_input_data(bytes_in_padded_input, 0);
+// 
+//     const uint8_t* data_ptr = inputs[0]->get_data_ptr<uint8_t>();
+//     uint8_t* padded_data_ptr = padded_input_data.data();
+// 
+//     pad_input_data(
+//         data_ptr, padded_data_ptr, type_size, input_shape, padded_input_shape, m_attrs.pads_begin);
+// 
+//     switch (input_et)
+//     {
+//     case element::Type_t::f32:
+//         runtime::reference::interpolate<float>(reinterpret_cast<float*>(padded_data_ptr),
+//                                                padded_input_shape,
+//                                                scales,
+//                                                axes,
+//                                                outputs[0]->get_data_ptr<float>(),
+//                                                out_shape,
+//                                                m_attrs);
+//         break;
+//     case element::Type_t::f16:
+//         runtime::reference::interpolate<float16>(reinterpret_cast<float16*>(padded_data_ptr),
+//                                                  padded_input_shape,
+//                                                  scales,
+//                                                  axes,
+//                                                  outputs[0]->get_data_ptr<float16>(),
+//                                                  out_shape,
+//                                                  m_attrs);
+//         break;
+//     case element::Type_t::i8:
+//         runtime::reference::interpolate<int8_t>(reinterpret_cast<int8_t*>(padded_data_ptr),
+//                                                 padded_input_shape,
+//                                                 scales,
+//                                                 axes,
+//                                                 outputs[0]->get_data_ptr<int8_t>(),
+//                                                 out_shape,
+//                                                 m_attrs);
+//         break;
+//     default:;
+//     }
+// 
+//     return true;
+// }
 
 namespace ngraph
 {

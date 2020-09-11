@@ -90,11 +90,11 @@ namespace ngraph
                         const AxisVector& input_order,
                         const Shape& output_shape);
 
-                void validate_and_infer_types() override;
+                // void validate_and_infer_types() override;
 
                 virtual std::shared_ptr<Node>
                     clone_with_new_inputs(const OutputVector& new_args) const override;
-                bool visit_attributes(AttributeVisitor& visitor) override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
 
                 /// \return The order in which to iterate over input axes.
                 const AxisVector& get_input_order() const { return m_input_order; }
@@ -104,8 +104,8 @@ namespace ngraph
                 void set_output_shape(const Shape& output_shape) { m_output_shape = output_shape; }
                 bool get_is_transpose() const { return m_is_transpose; }
                 void set_is_transpose(bool is_transpose) { m_is_transpose = is_transpose; }
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
 
             protected:
                 AxisVector m_input_order;
@@ -142,8 +142,8 @@ namespace ngraph
                 ///
                 Reshape(const Output<Node>& arg, const Output<Node>& pattern, bool special_zero);
 
-                bool visit_attributes(AttributeVisitor& visitor) override;
-                void validate_and_infer_types() override;
+                // bool visit_attributes(AttributeVisitor& visitor) override;
+                // void validate_and_infer_types() override;
 
                 size_t get_version() const override { return 1; }
                 virtual std::shared_ptr<Node>
@@ -151,8 +151,8 @@ namespace ngraph
 
                 bool get_special_zero() const { return m_special_zero; }
                 void set_special_zero(bool special_zero) { m_special_zero = special_zero; }
-                bool evaluate(const HostTensorVector& outputs,
-                              const HostTensorVector& inputs) const override;
+                // bool evaluate(const HostTensorVector& outputs,
+                //               const HostTensorVector& inputs) const override;
 
             protected:
                 bool m_special_zero;

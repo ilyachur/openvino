@@ -37,21 +37,21 @@ op::SquaredDifference::SquaredDifference(const Output<Node>& x1,
     constructor_validate_and_infer_types();
 }
 
-bool ngraph::op::v0::SquaredDifference::visit_attributes(AttributeVisitor& visitor)
-{
-    visitor.on_attribute("auto_broadcast", m_autobroadcast);
-    return true;
-}
-
-OutputVector op::SquaredDifference::decompose_op() const
-{
-    const auto x1 = input_value(0);
-    const auto x2 = input_value(1);
-
-    const auto difference = make_shared<op::Subtract>(x1, x2, m_autobroadcast);
-
-    return {difference * difference};
-}
+// bool ngraph::op::v0::SquaredDifference::visit_attributes(AttributeVisitor& visitor)
+// {
+//     visitor.on_attribute("auto_broadcast", m_autobroadcast);
+//     return true;
+// }
+// 
+// OutputVector op::SquaredDifference::decompose_op() const
+// {
+//     const auto x1 = input_value(0);
+//     const auto x2 = input_value(1);
+// 
+//     const auto difference = make_shared<op::Subtract>(x1, x2, m_autobroadcast);
+// 
+//     return {difference * difference};
+// }
 
 shared_ptr<Node> op::SquaredDifference::clone_with_new_inputs(const OutputVector& new_args) const
 {
