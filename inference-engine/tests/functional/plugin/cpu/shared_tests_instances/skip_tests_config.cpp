@@ -64,6 +64,11 @@ std::vector<std::string> disabledTestPatterns() {
         R"(.*inputsNumFusingBinConv.*)",
     };
 
+    if (!InferenceEngine::with_cpu_x86_avx512f()) {
+        // TODO: InnerProduct jit post op kernel is broken on AVX2
+        retVector.emplace_back(R"(.*GRU.*)");
+    }
+
     if (!InferenceEngine::with_cpu_x86_avx512_core()) {
         // on platforms which do not support bfloat16, we are disabling bf16 tests since there are no bf16 primitives,
         // tests are useless on such platforms
