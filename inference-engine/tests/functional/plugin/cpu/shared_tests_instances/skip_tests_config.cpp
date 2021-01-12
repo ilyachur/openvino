@@ -67,6 +67,8 @@ std::vector<std::string> disabledTestPatterns() {
     if (!InferenceEngine::with_cpu_x86_avx512f()) {
         // TODO: InnerProduct jit post op kernel is broken on AVX2
         retVector.emplace_back(R"(.*GRU.*)");
+        retVector.emplace_back(R"(.*LSTM.*)");
+        retVector.emplace_back(R"(.*RNN.*)");
     }
 
     if (!InferenceEngine::with_cpu_x86_avx512_core()) {
