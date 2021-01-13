@@ -69,6 +69,8 @@ std::vector<std::string> disabledTestPatterns() {
         retVector.emplace_back(R"(.*GRU.*)");
         retVector.emplace_back(R"(.*LSTM.*)");
         retVector.emplace_back(R"(.*RNN.*)");
+        retVector.emplace_back(R"(.*MatMul.*)");
+        retVector.emplace_back(R"(.*LPT.*)");
     }
 
     if (!InferenceEngine::with_cpu_x86_avx512_core()) {

@@ -13,6 +13,7 @@
 #include <transformations/init_node_info.hpp>
 #include <low_precision/transformer.hpp>
 #include <low_precision/mat_mul.hpp>
+#include <functional_test_utils/skip_tests_config.hpp>
 
 #include "common_test_utils/ngraph_test_utils.hpp"
 #include "lpt_ngraph_functions/mat_mul_function.hpp"
@@ -140,6 +141,7 @@ public:
 };
 
 TEST_P(MatMulWithConstantTransformation, CompareFunctions) {
+    SKIP_IF_CURRENT_TEST_IS_DISABLED();
     actualFunction->validate_nodes_and_infer_types();
     auto res = compare_functions(referenceFunction, actualFunction, true, true, true);
     ASSERT_TRUE(res.first) << res.second;
