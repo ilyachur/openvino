@@ -23,6 +23,16 @@ using namespace InferenceEngine;
 using namespace mkldnn;
 
 namespace MKLDNNPlugin {
+namespace {
+    inline void setSubnormalsToZero(float *data, size_t size) {
+        uint32_t *u32data = reinterpret_cast<uint32_t *>(data);
+        for (size_t i = 0; i < size; ++i) {
+            if ((u32data[i] & (0xFF << 23)) == 0) {
+                u32data[i] = 0.0f;
+            }
+        }
+    }
+}   // namespace
 
 MKLDNNMemory::MKLDNNMemory(const mkldnn::engine& eng) : eng(eng) {}
 

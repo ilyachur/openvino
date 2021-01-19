@@ -41,6 +41,8 @@ public:
     const mkldnn::memory& getWeights() const;
     const mkldnn::memory& getBias() const;
 
+    InferenceEngine::Precision getRuntimePrecision() const override;
+
 protected:
     std::shared_ptr<mkldnn::primitive_attr> initPrimitiveAttr();
 

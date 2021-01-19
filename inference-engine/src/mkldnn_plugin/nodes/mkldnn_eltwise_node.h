@@ -1,4 +1,4 @@
-// Copyright (C) 2018-2020 Intel Corporation
+// Copyright (C) 2018-2021 Intel Corporation
 // SPDX-License-Identifier: Apache-2.0
 //
 
@@ -132,6 +132,8 @@ public:
     float getBeta() const { return beta; }
 
     void appendPostOps(mkldnn::post_ops& ops) override;
+
+    InferenceEngine::Precision getRuntimePrecision() const override;
 
 private:
     void init() override;
