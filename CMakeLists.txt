@@ -34,7 +34,6 @@ file(REMOVE "${CMAKE_BINARY_DIR}/inference_engine_targets.cmake")
 foreach(component IN LISTS openvino_export_components)
     file(REMOVE "${CMAKE_BINARY_DIR}/${component}_dev_targets.cmake")
     unset(${component} CACHE)
-endforeach()
 
 #
 # Build
