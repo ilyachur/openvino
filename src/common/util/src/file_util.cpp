@@ -12,6 +12,7 @@
 #include <fstream>
 #include <sstream>
 
+#include "openvino/runtime/core.hpp"
 #include "openvino/util/common_util.hpp"
 
 #ifdef _WIN32
@@ -462,7 +463,7 @@ std::string get_ov_library_path_a() {
     CHAR ov_library_path[MAX_PATH];
     HMODULE hm = NULL;
     if (!GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
-                            reinterpret_cast<LPSTR>(ov::util::get_ov_lib_path),
+                            reinterpret_cast<LPSTR>(ov::shutdown),
                             &hm)) {
         std::stringstream ss;
         ss << "GetModuleHandle returned " << GetLastError();
@@ -472,7 +473,7 @@ std::string get_ov_library_path_a() {
     return get_path_name(std::string(ov_library_path));
 #elif defined(__APPLE__) || defined(__linux__) || defined(__EMSCRIPTEN__)
     Dl_info info;
-    dladdr(reinterpret_cast<void*>(ov::util::get_ov_lib_path), &info);
+    dladdr(reinterpret_cast<void*>(ov::shutdown), &info);
     return get_path_name(ov::util::get_absolute_file_path(info.dli_fname)).c_str();
 #else
 #    error "Unsupported OS"
